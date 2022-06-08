@@ -1,0 +1,21 @@
+.container {
+    z-index: 0;
+    padding: 0px;
+    display: flex;
+    position: absolute;
+    pointer-events: auto;
+    flex-direction: column;
+    transform-origin: top left;
+    padding: var(--spectrum-global-dimension-size-65);
+    background-color: var(
+        --spectrum-alias-background-color-gray-200,
+        var(--spectrum-global-color-gray-200, var(--spectrum-semantic-gray-200-color-background))
+    );
+
+    & > * {
+        padding: 0px;
+        border-left: none;
+        border-right: none;
+        border-bottom: none;
+    }
+}

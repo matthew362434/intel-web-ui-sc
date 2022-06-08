@@ -1,0 +1,29 @@
+{
+  "short_name": "Sonoma Creek",
+  "name": "Sonoma Creek",
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#ffffff",
+  "description": "Sonoma Creek",
+  "icons": [
+    {
+      "src": "brain-64.png",
+      "sizes": "64x64",
+      "type": "image/x-icon",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "brain-192.png",
+      "type": "image/png",
+      "sizes": "192x192",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "brain-512.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "any maskable"
+    }
+  ]
+}

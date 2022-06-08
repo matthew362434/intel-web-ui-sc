@@ -1,0 +1,38 @@
+/*change css code to something less ugly :D */
+.actionGroup {
+  & > button {
+    max-height: fit-content;
+    height: calc(var(--spectrum-global-dimension-size-200) + 0.5px);
+    border-top-left-radius: 0 !important;
+    border-bottom-left-radius: 0 !important;
+  }
+}
+
+.focused {
+  border-color: var(--spectrum-alias-border-color-mouse-focus) !important;
+}
+
+.groupFocused {
+  & > button {
+    @extend .focused;
+  }
+}
+
+.input {
+  &>input {
+    border-right: 0 !important;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    &:invalid {
+      &:hover {
+        @extend .focused;
+      }
+      @extend .focused;
+    }
+  }
+}
+
+.icon {
+  height: var(--spectrum-icon-size-xs);
+  width: var(--spectrum-icon-size-xs);
+}

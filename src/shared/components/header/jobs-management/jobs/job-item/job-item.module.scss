@@ -1,0 +1,15 @@
+.additionalInfo {
+    font-size: 1.2rem;
+    color: var(--spectrum-global-color-static-gray-700);
+}
+
+.progressBar {
+    left: 0px;
+    width: 100%;
+    position: absolute;
+    transform: translateY(calc(var(--spectrum-global-dimension-size-50) * -1));
+
+    & > div {
+        background: var(--spectrum-global-color-gray-100) !important;
+    }
+}

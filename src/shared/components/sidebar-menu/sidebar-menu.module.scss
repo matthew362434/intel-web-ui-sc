@@ -1,0 +1,43 @@
+.menu {
+    & > li {
+        background-color: var(--spectrum-global-color-gray-50) !important;
+    }
+
+    &>li[class^="_spectrum-Menu-divider"] {
+        background-color: var(--spectrum-global-color-gray-75) !important;
+        margin: var(--spectrum-global-dimension-size-150) 0;
+    }
+
+    & li[class*="_is-hovered"] {
+        background-color: red !important;
+        &:hover {
+            background-color: blue !important;
+        }
+    }
+
+    & li[aria-checked="true"] {
+      background-color: var(--spectrum-global-color-gray-75) !important;
+    }
+}
+
+.menuLighter {
+    & > li {
+        background-color: var(--spectrum-global-color-gray-75) !important;
+    }
+
+    &>li[class^="_spectrum-Menu-divider"] {
+        background-color: var(--spectrum-global-color-gray-200) !important;
+        margin: var(--spectrum-global-dimension-size-150) 0;
+    }
+
+    & li[class*="_is-hovered"] {
+        background-color: transparent !important;
+        &:hover {
+            background-color: var(--spectrum-global-color-gray-200) !important;
+        }
+    }
+
+    & li[aria-checked="true"] {
+      background-color: var(--spectrum-global-color-gray-200) !important;
+    }
+}

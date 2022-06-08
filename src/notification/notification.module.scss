@@ -1,0 +1,12 @@
+.notificationContainer {
+    bottom: var(--spectrum-global-dimension-size-200);
+    left: var(--spectrum-global-dimension-size-4600);
+    right: var(--spectrum-global-dimension-size-4600);
+    width: auto !important;
+    z-index: 1000000 !important;
+}
+
+.spectrum-Toast--warning {
+    color: var(--spectrum-global-color-gray-50);
+    background-color: red !important;
+}

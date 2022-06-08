@@ -1,0 +1,11 @@
+.confusionMatrixHeaders {
+  color: var(--spectrum-global-color-gray-800);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: center;
+}
+
+.confusionMatrixColumnHeader {
+  transform: rotate(-90deg);
+  display: block;
+}

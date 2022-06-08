@@ -1,0 +1,68 @@
+@keyframes shine {
+    to {
+        background-position: 200% 0;
+    }
+}
+
+.gradient {
+    background: linear-gradient(
+        to right,
+        rgba(46, 47, 50, 1) 0%,
+        rgba(88, 90, 98, .25) 50%,
+        rgba(46, 47, 50, 1) 75% 
+    ),rgba(46, 47, 50, 1);
+    background-repeat: repeat-y;
+    background-size: 50% 60%;
+    background-position: 0 0;
+    animation: shine 2s ease infinite;
+}
+
+.wrapper {
+    height: var(--spectrum-global-dimension-size-1700);
+    width: 100%;
+}
+
+.wrapper + .wrapper {
+    margin-top: var(--spectrum-global-dimension-size-200);
+}
+
+.image {
+    @extend .gradient;
+
+    width: var(--spectrum-global-dimension-size-3600);
+    flex-grow: 1;
+    flex-shrink: 0;
+    height: 100%;
+}
+
+.projectInfo {
+    width: 100%;
+    margin-bottom: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.projectName {
+    @extend .gradient;
+
+    height: var(--spectrum-global-dimension-size-350);
+    margin-bottom: var(--spectrum-global-dimension-size-100);
+}
+
+.date {
+    @extend .gradient;
+
+    height: var(--spectrum-global-dimension-size-250);
+    width: 30%;
+}
+
+.labels {
+    @extend .gradient;
+
+    height: var(--spectrum-global-dimension-size-250);
+    width: 80%;
+}
+
+.divider {
+    background-color: var(--spectrum-global-color-gray-75);
+}

@@ -1,0 +1,29 @@
+.main {
+  cursor: pointer;
+  width: fit-content;
+  height: fit-content;
+}
+
+.selected {
+  border: var(--spectrum-alias-border-size-thick) solid var(--energy-blue);
+  border-radius: var(--spectrum-alias-border-radius-regular);
+  @extend .main;
+}
+
+.card {
+  border: var(--spectrum-alias-border-size-thick) solid transparent;
+  @extend .main;
+}
+
+.disabled{
+  cursor: not-allowed;
+}
+
+.cardBody {
+  height: var(--spectrum-global-dimension-static-size-1000);
+  padding: var(--spectrum-global-dimension-static-size-250) !important;
+}
+
+.coverPhoto {
+  height: var(--spectrum-global-dimension-size-1700) !important;
+}

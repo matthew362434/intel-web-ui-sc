@@ -1,0 +1,17 @@
+.projectModelTitle {
+  font-size: var(--spectrum-global-dimension-font-size-200);
+  line-height: var(--spectrum-global-dimension-size-400);
+  font-family: intelOne;
+  margin: 0;
+}
+
+.projectModelDropDownVersionBtn {
+  min-width: var(--spectrum-global-dimension-size-200);
+  height: var(--spectrum-global-dimension-size-200);
+  background-color: transparent !important;
+  border-color: transparent !important;
+}
+
+.projectModelView {
+  overflow-y: hidden;
+}

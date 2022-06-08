@@ -1,0 +1,237 @@
+*, *::before, *::after {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+}
+
+@font-face {
+    font-family: intelOne;
+    src: url(intelone-display-regular.woff); }
+  
+  @font-face {
+    font-family: intelClear;
+    src: url(intel-clear.woff); }
+
+.spectrum {
+    --spectrum-global-dimension-size-25: 2px;
+    --spectrum-global-dimension-size-40: 3px;
+    --spectrum-global-dimension-size-65: 5px;
+    --spectrum-global-dimension-size-100: 8px;
+    --spectrum-global-dimension-size-175: 14px;
+    --spectrum-global-dimension-size-200: 16px;
+    --spectrum-global-dimension-size-450: 36px;
+    --spectrum-global-dimension-size-900: 72px;
+    --spectrum-global-dimension-font-size-100: 14px;
+    --spectrum-global-color-gray-50: #242528;
+    --spectrum-global-color-gray-300: #484a50;
+    --spectrum-global-color-gray-400: #585a62;
+    --spectrum-global-color-gray-500: #6b6e76;
+    --spectrum-global-color-gray-800: #e3e3e5;
+    --energy-blue-dark: #0095ca;
+    --energy-blue-darker: #005b85;
+    --spectrum-global-color-static-blue-600: #1473e6;
+    --spectrum-semantic-cta-color-background-default: var(--energy-blue-dark);
+    --spectrum-semantic-cta-color-background-hover: var(--energy-blue-darker);
+    --spectrum-button-cta-l-touch-hit-x: var(--spectrum-global-dimension-static-size-100);
+    --spectrum-button-cta-l-touch-hit-y: var(--spectrum-global-dimension-static-size-100);
+    --spectrum-button-cta-l-textonly-touch-hit-x: var(--spectrum-global-dimension-static-size-100);
+    --spectrum-button-cta-l-textonly-touch-hit-y: var(--spectrum-global-dimension-static-size-100);
+    --spectrum-button-cta-m-touch-hit-x: var(--spectrum-global-dimension-static-size-100);
+    --spectrum-button-cta-m-touch-hit-y: var(--spectrum-global-dimension-static-size-100);
+    --spectrum-button-cta-m-min-width: var(--spectrum-global-dimension-size-900);
+    --spectrum-button-cta-m-textonly-touch-hit-x: var(--spectrum-global-dimension-static-size-100);
+    --spectrum-button-cta-m-textonly-touch-hit-y: var(--spectrum-global-dimension-static-size-100);
+    --spectrum-button-cta-m-textonly-min-width: var(--spectrum-global-dimension-size-900);
+    --spectrum-button-cta-s-touch-hit-x: var(--spectrum-global-dimension-static-size-100);
+    --spectrum-button-cta-s-touch-hit-y: var(--spectrum-global-dimension-static-size-100);
+    --spectrum-button-cta-s-textonly-touch-hit-x: var(--spectrum-global-dimension-static-size-100);
+    --spectrum-button-cta-s-textonly-touch-hit-y: var(--spectrum-global-dimension-static-size-100);
+    --spectrum-button-cta-xl-touch-hit-x: var(--spectrum-global-dimension-static-size-100);
+    --spectrum-button-cta-xl-touch-hit-y: var(--spectrum-global-dimension-static-size-100);
+    --spectrum-button-cta-xl-textonly-touch-hit-x: var(--spectrum-global-dimension-static-size-100);
+    --spectrum-button-cta-xl-textonly-touch-hit-y: var(--spectrum-global-dimension-static-size-100);
+    --spectrum-button-over-background-l-touch-hit-x: var(--spectrum-global-dimension-static-size-100);
+    --spectrum-button-over-background-l-touch-hit-y: var(--spectrum-global-dimension-static-size-100);
+    --spectrum-button-over-background-l-textonly-touch-hit-x: var(--spectrum-global-dimension-static-size-100);
+    --spectrum-button-over-background-l-textonly-touch-hit-y: var(--spectrum-global-dimension-static-size-100);
+    --spectrum-button-over-background-m-touch-hit-x: var(--spectrum-global-dimension-static-size-100);
+    --spectrum-button-over-background-m-touch-hit-y: var(--spectrum-global-dimension-static-size-100);
+    --spectrum-button-over-background-m-min-width: var(--spectrum-global-dimension-size-900);
+    --spectrum-button-over-background-m-textonly-touch-hit-x: var(--spectrum-global-dimension-static-size-100);
+    --spectrum-button-over-background-m-textonly-touch-hit-y: var(--spectrum-global-dimension-static-size-100);
+    --spectrum-button-over-background-m-textonly-min-width: var(--spectrum-global-dimension-size-900);
+    --spectrum-button-over-background-s-touch-hit-x: var(--spectrum-global-dimension-static-size-100);
+    --spectrum-button-over-background-s-touch-hit-y: var(--spectrum-global-dimension-static-size-100);
+    --spectrum-button-over-background-s-textonly-touch-hit-x: var(--spectrum-global-dimension-static-size-100);
+    --spectrum-button-over-background-s-textonly-touch-hit-y: var(--spectrum-global-dimension-static-size-100);
+    --spectrum-button-over-background-xl-touch-hit-x: var(--spectrum-global-dimension-static-size-100);
+    --spectrum-button-over-background-xl-touch-hit-y: var(--spectrum-global-dimension-static-size-100);
+    --spectrum-button-over-background-xl-textonly-touch-hit-x: var(--spectrum-global-dimension-static-size-100);
+    --spectrum-button-over-background-xl-textonly-touch-hit-y: var(--spectrum-global-dimension-static-size-100);
+    --spectrum-button-quiet-over-background-l-touch-hit-x: var(--spectrum-global-dimension-static-size-100);
+    --spectrum-button-quiet-over-background-l-touch-hit-y: var(--spectrum-global-dimension-static-size-100);
+    --spectrum-button-quiet-over-background-l-textonly-touch-hit-x: var(--spectrum-global-dimension-static-size-100);
+    --spectrum-button-quiet-over-background-l-textonly-touch-hit-y: var(--spectrum-global-dimension-static-size-100);
+    --spectrum-button-quiet-over-background-m-touch-hit-x: var(--spectrum-global-dimension-static-size-100);
+    --spectrum-button-quiet-over-background-m-touch-hit-y: var(--spectrum-global-dimension-static-size-100);
+    --spectrum-button-quiet-over-background-m-min-width: var(--spectrum-global-dimension-size-900);
+    --spectrum-button-quiet-over-background-m-textonly-touch-hit-x: var(--spectrum-global-dimension-static-size-100);
+    --spectrum-button-quiet-over-background-m-textonly-touch-hit-y: var(--spectrum-global-dimension-static-size-100);
+    --spectrum-button-quiet-over-background-m-textonly-min-width: var(--spectrum-global-dimension-size-900);
+    --spectrum-button-quiet-over-background-s-touch-hit-x: var(--spectrum-global-dimension-static-size-100);
+    --spectrum-button-quiet-over-background-s-touch-hit-y: var(--spectrum-global-dimension-static-size-100);
+    --spectrum-button-quiet-over-background-s-textonly-touch-hit-x: var(--spectrum-global-dimension-static-size-100);
+    --spectrum-button-quiet-over-background-s-textonly-touch-hit-y: var(--spectrum-global-dimension-static-size-100);
+    --spectrum-button-quiet-over-background-xl-touch-hit-x: var(--spectrum-global-dimension-static-size-100);
+    --spectrum-button-quiet-over-background-xl-touch-hit-y: var(--spectrum-global-dimension-static-size-100);
+    --spectrum-button-quiet-over-background-xl-textonly-touch-hit-x: var(--spectrum-global-dimension-static-size-100);
+    --spectrum-button-quiet-over-background-xl-textonly-touch-hit-y: var(--spectrum-global-dimension-static-size-100);
+    --spectrum-button-primary-l-touch-hit-x: var(--spectrum-global-dimension-static-size-100);
+    --spectrum-button-primary-l-touch-hit-y: var(--spectrum-global-dimension-static-size-100);
+    --spectrum-button-primary-l-textonly-touch-hit-x: var(--spectrum-global-dimension-static-size-100);
+    --spectrum-button-primary-l-textonly-touch-hit-y: var(--spectrum-global-dimension-static-size-100);
+    --spectrum-button-primary-m-touch-hit-x: var(--spectrum-global-dimension-static-size-100);
+    --spectrum-button-primary-m-touch-hit-y: var(--spectrum-global-dimension-static-size-100);
+    --spectrum-button-primary-m-min-width: var(--spectrum-global-dimension-size-900);
+    --spectrum-button-primary-m-textonly-touch-hit-x: var(--spectrum-global-dimension-static-size-100);
+    --spectrum-button-primary-m-textonly-touch-hit-y: var(--spectrum-global-dimension-static-size-100);
+    --spectrum-button-primary-m-textonly-min-width: var(--spectrum-global-dimension-size-900);
+    --spectrum-button-primary-s-touch-hit-x: var(--spectrum-global-dimension-static-size-100);
+    --spectrum-button-primary-s-touch-hit-y: var(--spectrum-global-dimension-static-size-100);
+    --spectrum-button-primary-s-textonly-touch-hit-x: var(--spectrum-global-dimension-static-size-100);
+    --spectrum-button-primary-s-textonly-touch-hit-y: var(--spectrum-global-dimension-static-size-100);
+    --spectrum-button-primary-xl-touch-hit-x: var(--spectrum-global-dimension-static-size-100);
+    --spectrum-button-primary-xl-touch-hit-y: var(--spectrum-global-dimension-static-size-100);
+    --spectrum-button-primary-xl-textonly-touch-hit-x: var(--spectrum-global-dimension-static-size-100);
+    --spectrum-button-primary-xl-textonly-touch-hit-y: var(--spectrum-global-dimension-static-size-100); 
+}
+
+.container {
+    background-image: url(../static/img/login_background.png);
+    background-position: top center;
+    background-size: cover;
+    height: 100vh;
+    display: grid;
+    place-items: center;
+    margin: 0;
+    max-width: none !important;
+}
+
+.box {
+    position: relative;
+    box-shadow: 0px 4px 8px rgba(43, 44, 48, 0.05);
+    background-color: var(--spectrum-global-color-gray-50);
+    width: 80%;
+    height: 70%;
+}
+
+.boxHeader {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--spectrum-global-color-gray-300);
+    color: #fff;
+    height: 6rem;
+}
+
+.boxHeader::before {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: block;
+    content: '';
+    height: 6rem;
+    width: 1.6rem;
+    background-color: var(--spectrum-global-color-gray-400); 
+}
+
+.boxHeader-logo {
+    background-image: url(../static/img/brain.png);
+    background-repeat: no-repeat;
+    background-position: center;
+    height: 3.2rem;
+    width: 3.2rem;
+}
+
+.boxHeader-title {
+    font-size: 1.6rem;
+    line-height: 2.4rem;
+    font-family: intelClear;
+    color: var(--spectrum-global-color-gray-900);
+}
+
+.boxHeaderSquare-medium {
+    background-color: var(--spectrum-global-color-gray-300);
+    width: 1.6rem;
+    height: 1.6rem; 
+}
+
+.boxHeaderSquare-small {
+    background-color: var(--spectrum-global-color-gray-300);
+    width: 0.8rem;
+    height: 0.8rem;
+    margin-left: 1.6rem;
+}
+
+.contentBody {
+    position: relative;
+    height: 80%;
+}
+
+.contentWrapper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+}
+
+.content {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.errorStatusCode {
+    font-family: intelOne;
+    font-size: var(--spectrum-global-dimension-size-900);
+    color: var(--spectrum-global-color-gray-500);
+    font-weight: 900;
+    text-align: center;
+}
+
+.errorStatusTitle {
+    font-family: intelOne;
+    font-size: var(--spectrum-global-dimension-size-450);
+    text-align: center;
+    color: var(--spectrum-global-color-gray-800);
+    margin-top: var(--spectrum-global-dimension-size-450);
+}
+
+.errorMessage {
+    font-family: intelClear;
+    font-size: var(--spectrum-global-dimension-font-size-100);
+    color: var(--spectrum-global-color-gray-800);
+    margin-top: var(--spectrum-global-dimension-size-200);
+    margin-bottom: var(--spectrum-global-dimension-size-200);
+    text-align: center;
+}
+
+.buttonsGroup {
+    display: flex;
+    justify-content: center;
+    gap: var(--spectrum-global-dimension-size-100);
+}
+
+.button {
+    font-family: intelClear;
+    padding: var(--spectrum-global-dimension-size-40) var(--spectrum-global-dimension-size-175) var(--spectrum-global-dimension-size-65);
+    border-width: var(--spectrum-global-dimension-size-25);
+    border-radius: var(--spectrum-global-dimension-size-200); 
+}
+
+.button--cta {
+    color: #fff !important;
+}

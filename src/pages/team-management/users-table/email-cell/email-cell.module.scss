@@ -1,0 +1,9 @@
+.emailCell {
+  & svg path {
+    fill: #fff;
+  }
+}
+
+.emailCellTitle {
+  flex-basis: calc(100% - var(--spectrum-global-dimension-size-225) - var(--spectrum-global-dimension-size-300));
+}

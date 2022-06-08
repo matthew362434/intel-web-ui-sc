@@ -1,0 +1,12 @@
+build
+coverage
+node_modules
+**/*.tsx.snap
+src/assets(!/icons/**/index.ts)
+src/opencv-types
+src/__mocks__
+dex_templates
+oauth2_proxy_templates
+public
+storybook/main.js
+storybook/preview.js

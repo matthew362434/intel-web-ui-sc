@@ -1,0 +1,14 @@
+.container {
+    padding: 0px var(--spectrum-global-dimension-size-100);
+}
+
+.text {
+    font-size: 11px;
+}
+
+.progress {
+    display: block;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}

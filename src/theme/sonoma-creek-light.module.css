@@ -1,0 +1,13 @@
+.spectrum--sonoma-creek-light {
+    --spectrum-global-color-gray-50: #ffffff;
+    --spectrum-global-color-gray-75: #f9f9f9;
+    --spectrum-global-color-gray-100: #f4f5f5;
+    --spectrum-global-color-gray-200: #e9eaeb;
+    --spectrum-global-color-gray-300: #e2e2e4;
+    --spectrum-global-color-gray-400: #c9cace;
+    --spectrum-global-color-gray-500: #b2b3b9;
+    --spectrum-global-color-gray-600: #8b8e97;
+    --spectrum-global-color-gray-700: #6a6d75;
+    --spectrum-global-color-gray-800: #494b51;
+    --spectrum-global-color-gray-900: #2b2c30;
+}

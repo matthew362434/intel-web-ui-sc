@@ -1,0 +1,8 @@
+.gridWrapper {
+    padding: var(--spectrum-global-dimension-size-50);
+    padding-right: var(--spectrum-global-dimension-size-100);
+    overflow: hidden scroll;
+    min-height: var(--spectrum-global-dimension-size-1700);
+    background-color: var(--spectrum-global-color-gray-50);
+    margin-bottom: var(--spectrum-global-dimension-size-50);
+}

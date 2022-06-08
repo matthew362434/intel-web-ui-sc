@@ -1,0 +1,57 @@
+.timeline {
+    display: grid;
+    grid-area: timeline;
+
+    scrollbar-width: var(--spectrum-global-dimension-size-100) !important;
+
+    ::-webkit-scrollbar {
+        width: var(--spectrum-global-dimension-size-100) !important;
+        height: var(--spectrum-global-dimension-size-100) !important;
+    }
+}
+
+.timelineOuterRef {
+    overflow: auto;
+}
+
+.timelineSliderWrapper {
+    margin-top: var(--spectrum-global-dimension-size-100);
+    margin-bottom: calc(-1 * var(--spectrum-global-dimension-size-100));
+}
+
+.timelineInnerRef {
+    display: grid;
+}
+
+.videoFrameSegment {
+    width: 100%;
+    position: relative;
+
+    &:hover {
+        cursor: pointer;
+    }
+}
+
+.labelMarker {
+    background-color: var(--spectrum-global-color-gray-300);
+}
+
+.stripedBackground {
+    --striped-background-foreground-color: var(--spectrum-global-color-gray-300);
+    --striped-background-background-color: rgba(255, 255, 255, 0);
+    background-image: repeating-linear-gradient(
+        45deg,
+        var(--striped-background-foreground-color),
+        var(--striped-background-foreground-color) 4px,
+        var(--striped-background-background-color) 4px,
+        var(--striped-background-background-color) 6px
+    );
+}
+
+.groupedLabels {
+    font-size: var(--spectrum-global-dimension-font-size-25);
+}
+
+.activeFrameOverlay {
+    opacity: 0.25;
+}

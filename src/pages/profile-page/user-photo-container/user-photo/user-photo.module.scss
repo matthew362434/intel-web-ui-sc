@@ -1,0 +1,10 @@
+@import '../user-photo-placeholder/user-photo-placeholder.module';
+
+.userPhoto {
+  cursor: pointer;
+  border-radius: 50%;
+}
+
+.userPhotoChangeBtn {
+  @extend .userPhotoUploadBtn;
+}

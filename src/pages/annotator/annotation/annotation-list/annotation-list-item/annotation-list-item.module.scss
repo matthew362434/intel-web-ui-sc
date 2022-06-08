@@ -1,0 +1,34 @@
+.hiddenAnnotation {
+    color: var(--spectrum-alias-text-color-disabled, var(--spectrum-global-color-gray-500)) !important;
+    fill: var(--spectrum-alias-text-color-disabled, var(--spectrum-global-color-gray-500)) !important;
+}
+
+.selectedAnnotation {
+    background-color: rgba(0, 40, 90, 0.38) !important;
+}
+
+.annotationLabels {
+    color: var(--spectrum-alias-text-color, var(--spectrum-global-color-gray-800));
+    font-size: var(--spectrum-alias-font-size-default, var(--spectrum-global-dimension-font-size-100));
+    font-weight: var(--spectrum-global-font-weight-regular, 400);
+    line-height: 1.49;
+    flex-grow: 1;
+}
+
+.annotationSelectLabels {
+    color: var(--spectrum-alias-text-color-disabled, var(--spectrum-global-color-gray-500)) !important;
+}
+
+.disabledText {
+    color: var(--spectrum-global-color-gray-600) !important;
+}
+
+.annotationItem {
+    outline: none;
+}
+
+.labelList {
+    display: flex;
+    align-items: center;
+    gap: var(--spectrum-global-dimension-size-25);
+}

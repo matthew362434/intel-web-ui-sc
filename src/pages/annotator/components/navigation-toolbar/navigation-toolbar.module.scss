@@ -1,0 +1,112 @@
+.divider {
+    background-color: var(--spectrum-global-color-gray-50);
+}
+
+.annotations {
+    min-width: calc((var(--spectrum-global-dimension-size-4600) - var(--spectrum-global-dimension-size-100)));
+}
+
+.toggleMode {
+    place-self: end;
+}
+
+.projectName {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.breadcrumbsNav {
+    height: 100%;
+}
+
+.breadcrumbsList {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+}
+
+.triangle {
+    content: '';
+    position: absolute;
+    right: -16px;
+    z-index: 1;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: var(--spectrum-global-dimension-font-size-200) 0 var(--spectrum-global-dimension-font-size-200) var(--spectrum-global-dimension-font-size-200);
+    transform: rotate(360deg);
+    transition: all .3s ease-out;
+    border-color: transparent transparent transparent var(--spectrum-global-color-gray-100);
+}
+
+.breadcrumbItem {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    background-color: var(--spectrum-global-color-gray-100);
+    border: 1px solid var(--spectrum-global-color-gray-50);
+    border-right: none;
+    font-size: var(--spectrum-global-dimension-font-size-75);
+    line-height: 21px;
+    text-transform: uppercase;
+    transition: all .3s ease-out;
+    color: var(--spectrum-global-color-gray-700);
+    font-weight: bold;
+    padding-left: var(--spectrum-global-dimension-size-100);
+    padding-right: var(--spectrum-global-dimension-size-50);
+
+    &:hover,
+    &.selected {
+        background-color: var(--spectrum-global-color-gray-50);
+        text-decoration: none;
+        cursor: pointer;
+        color: var(--spectrum-global-color-gray-900);
+
+        &:after {
+           border-color: transparent transparent transparent var(--spectrum-global-color-gray-50);
+        }
+    }
+
+    &:first-child {
+        border-radius: var(--spectrum-global-dimension-size-25);
+        border-right: 1px solid var(--spectrum-global-color-gray-50);
+        margin-right: var(--spectrum-global-dimension-size-130);
+        padding-right: var(--spectrum-global-dimension-size-100);
+
+        &:after,
+        &:before {
+            display: none;
+        }
+    }
+
+    &:last-child {
+        border-left: none;
+        padding-left: var(--spectrum-global-dimension-size-250);
+        border-bottom-right-radius: 2px;
+        border-top-right-radius: 2px;
+
+        &:after {
+            right: -15px;
+        }
+
+        &:before {
+            right: -16px;
+        }
+    }
+
+    &:before {
+        @extend .triangle;
+
+        right: -17px;
+        border-color: transparent transparent transparent var(--spectrum-global-color-gray-50);
+    }
+
+    &:after {
+        @extend .triangle;
+    }
+}

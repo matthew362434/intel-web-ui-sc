@@ -1,0 +1,62 @@
+.accuracyProgressBar {
+    --meter-color: var(--energy-blue);
+    & div:first-child {
+        color: var(--spectrum-global-color-gray-800);
+        line-height: var(--spectrum-global-dimension-size-300);
+        margin: auto;
+    }
+
+    & div:last-child {
+        & div[class*='BarLoader-fill'] {
+            background: var(--meter-color);
+            margin-left: 0;
+        }
+    }
+}
+
+.accuracyProgressBarSmall {
+    & div:last-child {
+        height: 4px;
+
+        & div[class*='BarLoader-fill'] {
+            height: 4px;
+        }
+    }
+
+    & div:first-child {
+        font-size: var(--spectrum-global-dimension-font-size-100);
+        font-weight: 400;
+        margin-bottom: 0;
+    }
+}
+
+.accuracyProgressBarLarge {
+    & div:first-child {
+        font-size: var(--spectrum-global-dimension-font-size-200);
+        font-weight: bold;
+    }
+}
+
+.accuracyProgressBarOutdated {
+    & div:first-child {
+        color: var(--spectrum-global-color-gray-500);
+    }
+    & div:last-child {
+        & div[class*='BarLoader-fill'] {
+            background: var(--spectrum-global-color-gray-500);
+        }
+    }
+}
+
+.accuracyText {
+    font-size: var(--spectrum-global-dimension-font-size-75);
+}
+
+.accuracyTextSmall {
+    font-size: var(--spectrum-global-dimension-static-size-50);
+    margin-bottom: 0;
+}
+
+.accuracyTextOutdated {
+    color: var(--spectrum-global-color-gray-500);
+}

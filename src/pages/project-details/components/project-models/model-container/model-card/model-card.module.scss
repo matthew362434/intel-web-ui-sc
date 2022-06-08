@@ -1,0 +1,15 @@
+.modelCheckmark {
+  & > svg {
+    fill: var(--energy-blue);
+  }
+}
+
+.modelTime {
+  font-size: var(--spectrum-global-dimension-font-size-50);
+  color: var(--spectrum-global-color-gray-700);
+}
+
+.modelCard {
+  cursor: pointer;
+  margin-bottom: var(--spectrum-global-dimension-size-100);
+}

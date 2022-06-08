@@ -1,0 +1,150 @@
+{
+  "env": {
+    "node": true,
+    "es2020": true,
+    "browser": true,
+    "jest": true,
+    "jest/globals": true
+  },
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaVersion": 11,
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "jsx": true
+    }
+  },
+  "plugins": ["react-hooks", "import", "jest", "jsx-a11y", "@typescript-eslint", "eslint-plugin-header", "prettier"],
+  "extends": [
+    "plugin:react/recommended",
+    "plugin:react-hooks/recommended",
+    "plugin:jsx-a11y/recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:import/recommended",
+    "plugin:import/typescript",
+    "plugin:prettier/recommended",
+    "prettier"
+  ],
+  "settings": {
+    "import/resolver": {
+      "node": {
+        "paths": ["src"],
+        "extensions": [".js", ".jsx", ".ts", ".tsx"]
+      }
+    },
+    "react": {
+      "version": "detect"
+    }
+  },
+  "rules": {
+    "prettier/prettier": ["error", {
+      "tabWidth": 4
+    }],
+    "@typescript-eslint/no-loss-of-precision": ["off"],
+    "@typescript-eslint/no-unnecessary-type-constraint": ["off"],
+    "@typescript-eslint/camelcase": ["off"],
+    "camelcase": ["off"],
+    "react/jsx-props-no-spreading": ["off"],
+    "max-len": ["error", { "code": 120, "ignorePattern": "^import .*" }],
+    "no-underscore-dangle": ["error", { "allow": ["__typename"] }],
+    "@typescript-eslint/no-unused-vars": [
+      "warn", 
+      { 
+        "argsIgnorePattern": "^_"
+      }
+    ],
+    "react/jsx-indent-props": ["error", 4],
+    "object-curly-newline": ["off", { "ImportDeclaration": "never" }],
+    "linebreak-style": "off",
+    "react-hooks/rules-of-hooks": "error",
+    "react/require-default-props": "off",
+    "react/prop-types": "off",
+    "react/display-name": "off",
+    "react/react-in-jsx-scope": "off",
+    "import/no-webpack-loader-syntax": "off",
+    "jsx-a11y/click-events-have-key-events" : "off",
+    "jsx-a11y/no-noninteractive-element-interactions" : "off",
+    "jsx-a11y/no-static-element-interactions": "off",
+    "react/default-props-match-prop-types": "warn",
+    "react/no-unused-prop-types": "warn",
+    "jest/no-disabled-tests": "warn",
+    "jest/no-focused-tests": "error",
+    "jest/no-identical-title": "error",
+    "jest/prefer-to-have-length": "warn",
+    "jest/valid-expect": "error",
+    "react/jsx-filename-extension": [
+      2,
+      {
+        "extensions": [".js", ".jsx", ".ts", ".tsx"]
+      }
+    ],
+    "import/extensions": [
+      "error",
+      "ignorePackages",
+      {
+        "js": "never",
+        "jsx": "never",
+        "ts": "never",
+        "tsx": "never"
+      }
+    ],
+    "import/order": [
+      "error",
+      {
+        "groups": ["builtin", "external", "internal"],
+        "pathGroups": [
+          {
+            "pattern": "react",
+            "group": "external",
+            "position": "before"
+          }
+        ],
+        "pathGroupsExcludedImportTypes": ["react"],
+        "newlines-between": "always",
+        "alphabetize": {
+          "order": "asc",
+          "caseInsensitive": true
+        }
+      }
+    ],
+    "import/no-unresolved": [2, { "ignore": ["opencv-types", "OpenCVTypes", "^@.*", "csstype"] }],
+    "header/header": [
+      2,
+      "line", [
+        " INTEL CONFIDENTIAL",
+        "",
+        {
+          "pattern": " Copyright \\(C\\) \\d{4} Intel Corporation",
+          "template": " Copyright (C) 2022 Intel Corporation"
+        },
+        "",
+        " This software and the related documents are Intel copyrighted materials, and your use of them is governed by",
+        " the express license under which they were provided to you (\"License\"). Unless the License provides otherwise,",
+        " you may not use, modify, copy, publish, distribute, disclose or transmit this software or the related documents",
+        " without Intel's prior written permission.",
+        "",
+        " This software and the related documents are provided as is, with no express or implied warranties,",
+        " other than those that are expressly stated in the License."
+      ]
+    ],
+    "@typescript-eslint/no-shadow": ["warn", { "builtinGlobals": false, "hoist": "never" }],
+    "@typescript-eslint/ban-ts-comment": "warn"
+  },
+  "overrides": [
+    {
+      "files": ["*.test.tsx", "*.test.ts"],
+      "rules": {
+        "max-len": "off",
+        "@typescript-eslint/no-non-null-assertion": "error"
+      }
+    },
+    {
+      "files": [
+        "storybook/stories/**/*.stories.*"
+      ],
+      "rules": {
+        "import/no-anonymous-default-export": "off"
+      }
+    }
+  ]
+}

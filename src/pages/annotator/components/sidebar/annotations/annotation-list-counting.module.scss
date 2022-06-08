@@ -1,0 +1,31 @@
+.countingList {
+    width: 100%;
+    overflow: hidden;
+}
+
+.countingList [class*='spectrum-TreeView-itemLink'] {
+    cursor: auto !important;
+}
+
+.titleCount {
+    margin-left: auto;
+}
+
+.singleLabelWrapper {
+    display: flex;
+    height: auto;
+    flex-direction: row;
+    align-items: center;
+}
+
+.multipleLabelWrapper {
+    display: flex;
+    height: 100%;
+    flex-direction: column;
+    align-items: stretch;
+}
+
+.labelTreeWrapper {
+    height: calc(100% - var(--spectrum-global-dimension-size-1000)); /* subtract the header (counting) height */
+    overflow: auto;
+}

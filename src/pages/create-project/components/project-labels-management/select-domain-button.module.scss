@@ -1,0 +1,11 @@
+.border {
+  border: var(--spectrum-alias-border-size-thick) solid var(--energy-blue) !important;
+  border-radius: var(--spectrum-alias-border-radius-regular) !important;
+}
+
+.selected {
+  @extend .border;
+  &:hover {
+    @extend .border;
+  }
+}

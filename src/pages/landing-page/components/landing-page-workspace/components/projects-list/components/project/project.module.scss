@@ -1,0 +1,12 @@
+.thumbnail {
+   width: var(--spectrum-global-dimension-size-3600);
+   height: var(--spectrum-global-dimension-size-1700);
+   object-fit: cover;
+   min-width: 100%;
+   min-height: 100%;
+}
+
+.icon {
+   width: var(--spectrum-global-dimension-size-400);
+   height: var(--spectrum-global-dimension-size-400);
+}

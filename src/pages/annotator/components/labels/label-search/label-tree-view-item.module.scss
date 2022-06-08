@@ -1,0 +1,36 @@
+.viewCursor {
+    cursor: default;
+}
+
+.adjustableHeight {
+    height: max-content !important;
+
+    &::before {
+        height: 0 !important;
+        border: 0;
+        content: none !important;
+        background-color: transparent;
+    }
+}
+
+.lightMode {
+    background-color: var(--spectrum-global-color-gray-75);
+
+    &:hover {
+        background-color: var(--spectrum-global-color-gray-200);
+    }
+}
+
+.listItem {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    gap: var(--spectrum-global-dimension-static-size-100);
+}
+
+.chevronButton {
+    margin-left: -4rem !important;
+    & > svg {
+        margin-left: 0 !important;
+    }
+}

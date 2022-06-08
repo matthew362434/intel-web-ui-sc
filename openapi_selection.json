@@ -1,0 +1,4260 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "Sonoma Creek REST API",
+    "description": "REST API documentation for Sonoma Creek. "
+  },
+  "servers": [
+    {
+      "url": "{Server address}/api/{API version}",
+      "variables": {
+        "Server address": {
+          "description": "Sonoma Creek web address",
+          "default": "https://server.address"
+        },
+        "API version": {
+          "default": "v1.0",
+          "enum": [
+            "v1.0"
+          ]
+        }
+      }
+    }
+  ],
+  "paths": {
+    "/user/login": {
+      "post": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "Get a cookie required to authenticate",
+        "description": "This endpoint is used to retrieve a cookie that can be used to authenticate, which is required to make use of the other endpoints. Login and password must be included in the request body, with the password base64-encoded.",
+        "operationId": "Authenticate",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "required": [
+                  "login",
+                  "password"
+                ],
+                "type": "object",
+                "properties": {
+                  "login": {
+                    "type": "string",
+                    "description": "username to log in to the environment"
+                  },
+                  "password": {
+                    "type": "string",
+                    "description": "base64 encoded password for the environment"
+                  }
+                }
+              },
+              "examples": {
+                "Authentication example": {
+                  "value": {
+                    "login": "user@intel.com",
+                    "password": "cGFzc3dvcmQK"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully authenticated. A cookie named _oauth2_proxy is returned, this cookie is required for subsequent requests.\n",
+            "headers": {
+              "set-cookie": {
+                "schema": {
+                  "type": "string",
+                  "example": "_oauth2_proxy=\"foo\""
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/workspaces/{workspace_id}/projects": {
+      "get": {
+        "tags": [
+          "Projects"
+        ],
+        "summary": "Get info about all projects in workspace",
+        "description": "Get all projects in the workspace. Includes the labels, datasets and the tasks and their connections.",
+        "operationId": "getAllProjectsInAWorkspace",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "workspace_id",
+            "style": "simple",
+            "description": "The ID of the workspace of interest",
+            "schema": {
+              "type": "string",
+              "minLength": 24,
+              "maxLength": 24,
+              "example": "60d31793d5f1fb7e6e3c1a4c",
+              "description": "Mongo ID of the object"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The requested project info",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "items": {
+                      "type": "array",
+                      "description": "Array of projects",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "name": {
+                            "type": "string",
+                            "description": "Project name",
+                            "minLength": 1
+                          },
+                          "id": {
+                            "type": "string",
+                            "minLength": 24,
+                            "maxLength": 24,
+                            "example": "60d31793d5f1fb7e6e3c1a4c",
+                            "description": "Mongo ID of the object"
+                          },
+                          "pipeline": {
+                            "type": "object",
+                            "properties": {
+                              "connections": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "from": {
+                                      "type": "string",
+                                      "description": "Title of source task"
+                                    },
+                                    "to": {
+                                      "type": "string",
+                                      "description": "Title of destination task"
+                                    }
+                                  }
+                                },
+                                "description": "List of connections between pipeline tasks"
+                              },
+                              "tasks": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "title": {
+                                      "type": "string",
+                                      "description": "Task title, must be unique"
+                                    },
+                                    "task_type": {
+                                      "type": "string",
+                                      "description": "Task type; should be one of: [ classification, detection, segmentation, crop, dataset ]"
+                                    },
+                                    "labels": {
+                                      "type": "array",
+                                      "description": "List of labels",
+                                      "items": {
+                                        "type": "object",
+                                        "properties": {
+                                          "name": {
+                                            "type": "string",
+                                            "description": "Label name, must be unique"
+                                          },
+                                          "id": {
+                                            "type": "string",
+                                            "minLength": 24,
+                                            "maxLength": 24,
+                                            "example": "60d31793d5f1fb7e6e3c1a4c",
+                                            "description": "Mongo ID of the object"
+                                          },
+                                          "color": {
+                                            "type": "string",
+                                            "pattern": "^#([a-fA-F0-9]{6}|[a-fA-F0-9]{8})$",
+                                            "description": "Label color, picked at random if not specified"
+                                          },
+                                          "group": {
+                                            "type": "string",
+                                            "description": "Name of label group"
+                                          },
+                                          "is_empty": {
+                                            "type": "boolean",
+                                            "readOnly": true,
+                                            "description": "Indicates whether the label is an empty label"
+                                          },
+                                          "parent_id": {
+                                            "description": "Name of parent label"
+                                          }
+                                        }
+                                      }
+                                    },
+                                    "id": {
+                                      "type": "string",
+                                      "minLength": 24,
+                                      "maxLength": 24,
+                                      "example": "60d31793d5f1fb7e6e3c1a4c",
+                                      "description": "Mongo ID of the object"
+                                    },
+                                    "label_schema_id": {
+                                      "type": "string",
+                                      "minLength": 24,
+                                      "maxLength": 24,
+                                      "example": "60d31793d5f1fb7e6e3c1a4c",
+                                      "description": "Mongo ID of the object"
+                                    }
+                                  }
+                                },
+                                "description": "List of tasks in the pipeline"
+                              }
+                            }
+                          },
+                          "creation_time": {
+                            "type": "string",
+                            "description": "Creation time of the project"
+                          },
+                          "score": {
+                            "type": "number",
+                            "format": "float",
+                            "description": "Project score"
+                          },
+                          "thumbnail": {
+                            "type": "string",
+                            "description": "Thumbnail url"
+                          },
+                          "datasets": {
+                            "type": "array",
+                            "description": "List of datasets in the project",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "id": {
+                                  "type": "string",
+                                  "minLength": 24,
+                                  "maxLength": 24,
+                                  "example": "60d31793d5f1fb7e6e3c1a4c",
+                                  "description": "Mongo ID of the object"
+                                },
+                                "name": {
+                                  "type": "string",
+                                  "description": "Name of the dataset"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "items": [
+                    {
+                      "creation_time": "2021-07-28T09:31:18.137000+00:00",
+                      "datasets": [
+                        {
+                          "id": "610123e6efba22ca453f11bc",
+                          "name": "Example segmentation project"
+                        }
+                      ],
+                      "id": "610123e6efba22ca453f11bd",
+                      "name": "Example segmentation project",
+                      "pipeline": {
+                        "connections": [
+                          {
+                            "from": "610123e6efba22ca453f11be",
+                            "to": "610123e6efba22ca453f11c1"
+                          }
+                        ],
+                        "tasks": [
+                          {
+                            "id": "610123e6efba22ca453f11be",
+                            "task_type": "dataset",
+                            "title": "Dataset"
+                          },
+                          {
+                            "id": "610123e6efba22ca453f11c1",
+                            "label_schema_id": "610123e6efba22ca453f11d2",
+                            "labels": [
+                              {
+                                "color": "#0015ffff",
+                                "hotkey": "ctrl+5",
+                                "group": "default_segmentation",
+                                "id": "610123e5efba22ca453f11b9",
+                                "is_empty": false,
+                                "name": "object",
+                                "parent_id": null
+                              },
+                              {
+                                "color": "#b10334ff",
+                                "hotkey": "ctrl+0",
+                                "group": "Empty",
+                                "id": "610123e5efba22ca453f11ba",
+                                "is_empty": true,
+                                "name": "Empty",
+                                "parent_id": null
+                              }
+                            ],
+                            "task_type": "segmentation",
+                            "title": "Sample segmentation task"
+                          }
+                        ]
+                      },
+                      "score": 70,
+                      "thumbnail": "/api/v1.0/workspaces/610123e5efba22ca453f11b6/projects/610123e6efba22ca453f11bd/thumbnail"
+                    },
+                    {
+                      "creation_time": "2021-07-28T09:37:17.319000+00:00",
+                      "datasets": [
+                        {
+                          "id": "6101254defba22ca453f11cc",
+                          "name": "Example classification project"
+                        }
+                      ],
+                      "id": "6101254defba22ca453f11cd",
+                      "name": "Example classification project",
+                      "pipeline": {
+                        "connections": [
+                          {
+                            "from": "6101254defba22ca453f11ce",
+                            "to": "6101254defba22ca453f11d1"
+                          }
+                        ],
+                        "tasks": [
+                          {
+                            "id": "6101254defba22ca453f11ce",
+                            "task_type": "dataset",
+                            "title": "Dataset"
+                          },
+                          {
+                            "id": "6101254defba22ca453f11d1",
+                            "label_schema_id": "610123e6efba22ca453f11f1",
+                            "labels": [
+                              {
+                                "color": "#0015ffff",
+                                "hotkey": "ctrl+6",
+                                "group": "species",
+                                "id": "6101254defba22ca453f11c6",
+                                "is_empty": false,
+                                "name": "horse",
+                                "parent_id": null
+                              },
+                              {
+                                "color": "#00ffffff",
+                                "hotkey": "ctrl+7",
+                                "group": "species",
+                                "id": "6101254defba22ca453f11c7",
+                                "is_empty": false,
+                                "name": "donkey",
+                                "parent_id": null
+                              },
+                              {
+                                "color": "#00aaaaff",
+                                "hotkey": "ctrl+8",
+                                "group": "saddle_state",
+                                "id": "6101254defba22ca453f11c8",
+                                "is_empty": false,
+                                "name": "saddled",
+                                "parent_id": null
+                              },
+                              {
+                                "color": "#00aaffff",
+                                "hotkey": "ctrl+9",
+                                "group": "saddle_state",
+                                "id": "6101254defba22ca453f11c9",
+                                "is_empty": false,
+                                "name": "unsaddled",
+                                "parent_id": null
+                              },
+                              {
+                                "color": "#7ada55ff",
+                                "hotkey": "ctrl+0",
+                                "group": "No Class",
+                                "id": "6101254defba22ca453f11ca",
+                                "is_empty": true,
+                                "name": "No Class",
+                                "parent_id": null
+                              }
+                            ],
+                            "task_type": "classification",
+                            "title": "Sample classification task"
+                          }
+                        ]
+                      },
+                      "score": 70,
+                      "thumbnail": "/api/v1.0/workspaces/6101254defba22ca453f11c2/projects/6101254defba22ca453f11cd/thumbnail"
+                    },
+                    {
+                      "creation_time": "2021-07-28T10:03:08.944000+00:00",
+                      "datasets": [
+                        {
+                          "id": "61012b5cefba22ca453f11de",
+                          "name": "Example classification project - label hierarchy"
+                        }
+                      ],
+                      "id": "61012b5cefba22ca453f11df",
+                      "name": "Example classification project - label hierarchy",
+                      "pipeline": {
+                        "connections": [
+                          {
+                            "from": "61012b5cefba22ca453f11e0",
+                            "to": "61012b5defba22ca453f11e3"
+                          }
+                        ],
+                        "tasks": [
+                          {
+                            "id": "61012b5cefba22ca453f11e0",
+                            "task_type": "dataset",
+                            "title": "Dataset"
+                          },
+                          {
+                            "id": "61012b5defba22ca453f11e3",
+                            "label_schema_id": "610123e6efba22ca453f11e4",
+                            "labels": [
+                              {
+                                "color": "#0015ddff",
+                                "hotkey": "",
+                                "group": "default - Sample classification task",
+                                "id": "61012b5cefba22ca453f11d7",
+                                "is_empty": false,
+                                "name": "animal",
+                                "parent_id": null
+                              },
+                              {
+                                "color": "#0015ffff",
+                                "hotkey": "ctrl+5",
+                                "group": "species",
+                                "id": "61012b5cefba22ca453f11d8",
+                                "is_empty": false,
+                                "name": "horse",
+                                "parent_id": null
+                              },
+                              {
+                                "color": "#00ffffff",
+                                "hotkey": "ctrl+6",
+                                "group": "species",
+                                "id": "61012b5cefba22ca453f11d9",
+                                "is_empty": false,
+                                "name": "donkey",
+                                "parent_id": null
+                              },
+                              {
+                                "color": "#00aaaaff",
+                                "hotkey": "ctrl+7",
+                                "group": "saddle_state",
+                                "id": "61012b5cefba22ca453f11da",
+                                "is_empty": false,
+                                "name": "saddled",
+                                "parent_id": null
+                              },
+                              {
+                                "color": "#00aaffff",
+                                "hotkey": "ctrl+8",
+                                "group": "saddle_state",
+                                "id": "61012b5cefba22ca453f11db",
+                                "is_empty": false,
+                                "name": "unsaddled",
+                                "parent_id": null
+                              },
+                              {
+                                "color": "#676f5fff",
+                                "hotkey": "ctrl+0",
+                                "group": "No Class",
+                                "id": "61012b5cefba22ca453f11dc",
+                                "is_empty": true,
+                                "name": "No Class",
+                                "parent_id": null
+                              }
+                            ],
+                            "task_type": "classification",
+                            "title": "Sample classification task"
+                          }
+                        ]
+                      },
+                      "score": 70,
+                      "thumbnail": "/api/v1.0/workspaces/61012b5cefba22ca453f11d2/projects/61012b5cefba22ca453f11df/thumbnail"
+                    },
+                    {
+                      "creation_time": "2021-07-28T10:05:43.819000+00:00",
+                      "datasets": [
+                        {
+                          "id": "61012bf776379a12afa0789b",
+                          "name": "Example classification project - label hierarchy"
+                        }
+                      ],
+                      "id": "61012bf776379a12afa0789c",
+                      "name": "Example classification project - label hierarchy",
+                      "pipeline": {
+                        "connections": [
+                          {
+                            "from": "61012bf776379a12afa0789d",
+                            "to": "61012bf776379a12afa078a0"
+                          }
+                        ],
+                        "tasks": [
+                          {
+                            "id": "61012bf776379a12afa0789d",
+                            "task_type": "dataset",
+                            "title": "Dataset"
+                          },
+                          {
+                            "id": "61012bf776379a12afa078a0",
+                            "label_schema_id": "61012bf776379a12afa078b2",
+                            "labels": [
+                              {
+                                "color": "#0015ddff",
+                                "hotkey": "",
+                                "group": "default - Sample classification task",
+                                "id": "61012bf776379a12afa07894",
+                                "is_empty": false,
+                                "name": "animal",
+                                "parent_id": null
+                              },
+                              {
+                                "color": "#0015ffff",
+                                "hotkey": "ctrl+5",
+                                "group": "species",
+                                "id": "61012bf776379a12afa07895",
+                                "is_empty": false,
+                                "name": "horse",
+                                "parent_id": null
+                              },
+                              {
+                                "color": "#00ffffff",
+                                "hotkey": "ctrl+6",
+                                "group": "species",
+                                "id": "61012bf776379a12afa07896",
+                                "is_empty": false,
+                                "name": "donkey",
+                                "parent_id": null
+                              },
+                              {
+                                "color": "#00aaaaff",
+                                "hotkey": "ctrl+7",
+                                "group": "saddle_state",
+                                "id": "61012bf776379a12afa07897",
+                                "is_empty": false,
+                                "name": "saddled",
+                                "parent_id": null
+                              },
+                              {
+                                "color": "#00aaffff",
+                                "hotkey": "ctrl+8",
+                                "group": "saddle_state",
+                                "id": "61012bf776379a12afa07898",
+                                "is_empty": false,
+                                "name": "unsaddled",
+                                "parent_id": null
+                              },
+                              {
+                                "color": "#19e0a5ff",
+                                "hotkey": "ctrl+0",
+                                "group": "No Class",
+                                "id": "61012bf776379a12afa07899",
+                                "is_empty": true,
+                                "name": "No Class",
+                                "parent_id": null
+                              }
+                            ],
+                            "task_type": "classification",
+                            "title": "Sample classification task"
+                          }
+                        ]
+                      },
+                      "score": 70,
+                      "thumbnail": "/api/v1.0/workspaces/61012bf776379a12afa0788f/projects/61012bf776379a12afa0789c/thumbnail"
+                    },
+                    {
+                      "creation_time": "2021-07-28T10:09:31.764000+00:00",
+                      "datasets": [
+                        {
+                          "id": "61012cdb1d38a5e71ef3baf8",
+                          "name": "Example classification project - label hierarchy"
+                        }
+                      ],
+                      "id": "61012cdb1d38a5e71ef3baf9",
+                      "name": "Example classification project - label hierarchy",
+                      "pipeline": {
+                        "connections": [
+                          {
+                            "from": "61012cdb1d38a5e71ef3bafa",
+                            "to": "61012cdb1d38a5e71ef3bafd"
+                          }
+                        ],
+                        "tasks": [
+                          {
+                            "id": "61012cdb1d38a5e71ef3bafa",
+                            "task_type": "dataset",
+                            "title": "Dataset"
+                          },
+                          {
+                            "id": "61012cdb1d38a5e71ef3bafd",
+                            "label_schema_id": "61012cdb1d38a5e71ef3bafe",
+                            "labels": [
+                              {
+                                "color": "#0015ddff",
+                                "hotkey": "",
+                                "group": "default - Sample classification task",
+                                "id": "61012cdb1d38a5e71ef3baf1",
+                                "is_empty": false,
+                                "name": "animal",
+                                "parent_id": null
+                              },
+                              {
+                                "color": "#0015ffff",
+                                "hotkey": "ctrl+5",
+                                "group": "species",
+                                "id": "61012cdb1d38a5e71ef3baf2",
+                                "is_empty": false,
+                                "name": "horse",
+                                "parent_id": "61012cdb1d38a5e71ef3baf1"
+                              },
+                              {
+                                "color": "#00ffffff",
+                                "hotkey": "ctrl+6",
+                                "group": "species",
+                                "id": "61012cdb1d38a5e71ef3baf3",
+                                "is_empty": false,
+                                "name": "donkey",
+                                "parent_id": "61012cdb1d38a5e71ef3baf1"
+                              },
+                              {
+                                "color": "#00aaaaff",
+                                "hotkey": "ctrl+7",
+                                "group": "saddle_state",
+                                "id": "61012cdb1d38a5e71ef3baf4",
+                                "is_empty": false,
+                                "name": "saddled",
+                                "parent_id": null
+                              },
+                              {
+                                "color": "#00aaffff",
+                                "hotkey": "ctrl+8",
+                                "group": "saddle_state",
+                                "id": "61012cdb1d38a5e71ef3baf5",
+                                "is_empty": false,
+                                "name": "unsaddled",
+                                "parent_id": null
+                              },
+                              {
+                                "color": "#9ee8d3ff",
+                                "hotkey": "ctrl+0",
+                                "group": "No Class",
+                                "id": "61012cdb1d38a5e71ef3baf6",
+                                "is_empty": true,
+                                "name": "No Class",
+                                "parent_id": null
+                              }
+                            ],
+                            "task_type": "classification",
+                            "title": "Sample classification task"
+                          }
+                        ]
+                      },
+                      "score": 70,
+                      "thumbnail": "/api/v1.0/workspaces/61012cdb1d38a5e71ef3baec/projects/61012cdb1d38a5e71ef3baf9/thumbnail"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Object not found. See the examples for details.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": [
+                    "http_status",
+                    "message",
+                    "error_code"
+                  ],
+                  "properties": {
+                    "http_status": {
+                      "type": "integer",
+                      "enum": [
+                        400,
+                        404,
+                        409,
+                        "412 415",
+                        500,
+                        501,
+                        503
+                      ]
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Message from server"
+                    },
+                    "error_code": {
+                      "type": "string",
+                      "description": "Error code from server"
+                    }
+                  }
+                },
+                "examples": {
+                  "Workspace not found response": {
+                    "value": {
+                      "http_status": 404,
+                      "message": "Could not find workspace with id 60ec6bbfb98caeb87e34306e",
+                      "error_code": "workspace_not_found"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/workspaces/{workspace_id}/projects/{project_id}": {
+      "get": {
+        "tags": [
+          "Projects"
+        ],
+        "summary": "Get info about a project",
+        "description": "Get information on a project. Includes the labels, datasets and the tasks and their connections.",
+        "operationId": "getProjectInfo",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "workspace_id",
+            "style": "simple",
+            "description": "The ID of the workspace of interest",
+            "schema": {
+              "type": "string",
+              "minLength": 24,
+              "maxLength": 24,
+              "example": "60d31793d5f1fb7e6e3c1a4c",
+              "description": "Mongo ID of the object"
+            },
+            "required": true
+          },
+          {
+            "in": "path",
+            "name": "project_id",
+            "style": "simple",
+            "description": "The ID of the project of interest",
+            "schema": {
+              "type": "string",
+              "minLength": 24,
+              "maxLength": 24,
+              "example": "60d31793d5f1fb7e6e3c1a4c",
+              "description": "Mongo ID of the object"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Info of the requested project",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "description": "Project name",
+                      "minLength": 1
+                    },
+                    "id": {
+                      "type": "string",
+                      "minLength": 24,
+                      "maxLength": 24,
+                      "example": "60d31793d5f1fb7e6e3c1a4c",
+                      "description": "Mongo ID of the object"
+                    },
+                    "pipeline": {
+                      "type": "object",
+                      "properties": {
+                        "connections": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "from": {
+                                "type": "string",
+                                "description": "Title of source task"
+                              },
+                              "to": {
+                                "type": "string",
+                                "description": "Title of destination task"
+                              }
+                            }
+                          },
+                          "description": "List of connections between pipeline tasks"
+                        },
+                        "tasks": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "title": {
+                                "type": "string",
+                                "description": "Task title, must be unique"
+                              },
+                              "task_type": {
+                                "type": "string",
+                                "description": "Task type; should be one of: [ classification, detection, segmentation, crop, dataset ]"
+                              },
+                              "labels": {
+                                "type": "array",
+                                "description": "List of labels",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "name": {
+                                      "type": "string",
+                                      "description": "Label name, must be unique"
+                                    },
+                                    "id": {
+                                      "type": "string",
+                                      "minLength": 24,
+                                      "maxLength": 24,
+                                      "example": "60d31793d5f1fb7e6e3c1a4c",
+                                      "description": "Mongo ID of the object"
+                                    },
+                                    "color": {
+                                      "type": "string",
+                                      "pattern": "^#([a-fA-F0-9]{6}|[a-fA-F0-9]{8})$",
+                                      "description": "Label color, picked at random if not specified"
+                                    },
+                                    "group": {
+                                      "type": "string",
+                                      "description": "Name of label group"
+                                    },
+                                    "is_empty": {
+                                      "type": "boolean",
+                                      "readOnly": true,
+                                      "description": "Indicates whether the label is an empty label"
+                                    },
+                                    "parent_id": {
+                                      "description": "Name of parent label"
+                                    }
+                                  }
+                                }
+                              },
+                              "id": {
+                                "type": "string",
+                                "minLength": 24,
+                                "maxLength": 24,
+                                "example": "60d31793d5f1fb7e6e3c1a4c",
+                                "description": "Mongo ID of the object"
+                              },
+                              "label_schema_id": {
+                                "type": "string",
+                                "minLength": 24,
+                                "maxLength": 24,
+                                "example": "60d31793d5f1fb7e6e3c1a4c",
+                                "description": "Mongo ID of the object"
+                              }
+                            }
+                          },
+                          "description": "List of tasks in the pipeline"
+                        }
+                      }
+                    },
+                    "creation_time": {
+                      "type": "string",
+                      "description": "Creation time of the project"
+                    },
+                    "score": {
+                      "type": "number",
+                      "format": "float",
+                      "description": "Project score"
+                    },
+                    "thumbnail": {
+                      "type": "string",
+                      "description": "Thumbnail url"
+                    },
+                    "datasets": {
+                      "type": "array",
+                      "description": "List of datasets in the project",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "minLength": 24,
+                            "maxLength": 24,
+                            "example": "60d31793d5f1fb7e6e3c1a4c",
+                            "description": "Mongo ID of the object"
+                          },
+                          "name": {
+                            "type": "string",
+                            "description": "Name of the dataset"
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "Task chain project response": {
+                    "value": {
+                      "creation_time": "2021-06-29T16:24:30.928000+00:00",
+                      "id": "60db493ed20945a0046f56ce",
+                      "name": "Example chain project",
+                      "pipeline": {
+                        "connections": [
+                          {
+                            "from": "60db493fd20945a0046f56cf",
+                            "to": "60db493fd20945a0046f56d2"
+                          },
+                          {
+                            "from": "60db493fd20945a0046f56d2",
+                            "to": "60db493fd20945a0046f56d3"
+                          },
+                          {
+                            "from": "60db493fd20945a0046f56d3",
+                            "to": "60db493fd20945a0046f56d6"
+                          }
+                        ],
+                        "tasks": [
+                          {
+                            "id": "60db493fd20945a0046f56cf",
+                            "task_type": "dataset",
+                            "title": "Dataset"
+                          },
+                          {
+                            "id": "60db493fd20945a0046f56d2",
+                            "label_schema_id": "60db493fd20945a0046f56d5",
+                            "labels": [
+                              {
+                                "color": "#0015ffff",
+                                "hotkey": "ctrl+5",
+                                "group": "default_detection",
+                                "id": "60db493ed20945a0046f56c6",
+                                "is_empty": false,
+                                "name": "object"
+                              },
+                              {
+                                "color": "#ea879cff",
+                                "hotkey": "ctrl+0",
+                                "group": "No Object",
+                                "id": "60db493ed20945a0046f56ca",
+                                "is_empty": true,
+                                "name": "No Object"
+                              }
+                            ],
+                            "task_type": "detection",
+                            "title": "Sample detection task"
+                          },
+                          {
+                            "id": "60db493fd20945a0046f56d3",
+                            "task_type": "crop",
+                            "title": "crop task"
+                          },
+                          {
+                            "id": "60db493fd20945a0046f56d6",
+                            "labels": [
+                              {
+                                "color": "#0015ffff",
+                                "hotkey": "ctrl+6",
+                                "group": "default_classification",
+                                "id": "60db493ed20945a0046f56c7",
+                                "is_empty": false,
+                                "name": "rectangle",
+                                "parent_id": "60db493ed20945a0046f56c6"
+                              },
+                              {
+                                "color": "#7f000aff",
+                                "hotkey": "ctrl+7",
+                                "group": "default_classification",
+                                "id": "60db493ed20945a0046f56c8",
+                                "is_empty": false,
+                                "name": "circle",
+                                "parent_id": "60db493ed20945a0046f56c6"
+                              },
+                              {
+                                "color": "#15ff00ff",
+                                "hotkey": "ctrl+8",
+                                "group": "default_classification",
+                                "id": "60db493ed20945a0046f56c9",
+                                "is_empty": false,
+                                "name": "triangle",
+                                "parent_id": "60db493ed20945a0046f56c6"
+                              },
+                              {
+                                "color": "#a311f7ff",
+                                "hotkey": "ctrl+0",
+                                "group": "No Class",
+                                "id": "60db493ed20945a0046f56cb",
+                                "is_empty": true,
+                                "name": "No Class"
+                              }
+                            ],
+                            "task_type": "classification",
+                            "title": "Sample classification task"
+                          }
+                        ]
+                      },
+                      "datasets": [
+                        {
+                          "id": "6101254defba22ca453f11cc",
+                          "name": "Example chain project"
+                        }
+                      ],
+                      "score": 70,
+                      "thumbnail": "/api/v1.0/workspaces/60d31792d5f1fb7e6e3c1a45/projects/60db493ed20945a0046f56ce/thumbnail"
+                    }
+                  },
+                  "Single task project response": {
+                    "value": {
+                      "creation_time": "2021-06-23T11:14:27.344000+00:00",
+                      "id": "60d31793d5f1fb7e6e3c1a4c",
+                      "name": "Example detection project demo",
+                      "pipeline": {
+                        "connections": [
+                          {
+                            "from": "60d31793d5f1fb7e6e3c1a4e",
+                            "to": "60d31793d5f1fb7e6e3c1a51"
+                          }
+                        ],
+                        "tasks": [
+                          {
+                            "id": "60d31793d5f1fb7e6e3c1a4e",
+                            "task_type": "dataset",
+                            "title": "Dataset"
+                          },
+                          {
+                            "id": "60d31793d5f1fb7e6e3c1a51",
+                            "label_schema_id": "60d31793d5f1fb7e6e3c1a62",
+                            "labels": [
+                              {
+                                "color": "#0015ffff",
+                                "hotkey": "ctrl+5",
+                                "group": "default",
+                                "id": "60d31793d5f1fb7e6e3c1a46",
+                                "is_empty": false,
+                                "name": "rectangle"
+                              },
+                              {
+                                "color": "#2a2b2eff",
+                                "hotkey": "ctrl+0",
+                                "group": "No Object",
+                                "id": "60d31793d5f1fb7e6e3c1a49",
+                                "is_empty": true,
+                                "name": "No Object"
+                              }
+                            ],
+                            "task_type": "detection",
+                            "title": "Sample detection task"
+                          }
+                        ]
+                      },
+                      "datasets": [
+                        {
+                          "id": "6101254defba22ca453f11cc",
+                          "name": "Example detection project demo"
+                        }
+                      ],
+                      "score": 70,
+                      "thumbnail": "/api/v1.0/workspaces/60d31792d5f1fb7e6e3c1a45/projects/60d31793d5f1fb7e6e3c1a4c/thumbnail"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Object not found. See the examples for details.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": [
+                    "http_status",
+                    "message",
+                    "error_code"
+                  ],
+                  "properties": {
+                    "http_status": {
+                      "type": "integer",
+                      "enum": [
+                        400,
+                        404,
+                        409,
+                        "412 415",
+                        500,
+                        501,
+                        503
+                      ]
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Message from server"
+                    },
+                    "error_code": {
+                      "type": "string",
+                      "description": "Error code from server"
+                    }
+                  }
+                },
+                "examples": {
+                  "Workspace not found response": {
+                    "value": {
+                      "http_status": 404,
+                      "message": "Could not find workspace with id 60ec6bbfb98caeb87e34306e",
+                      "error_code": "workspace_not_found"
+                    }
+                  },
+                  "Project not found response": {
+                    "value": {
+                      "http_status": 404,
+                      "message": "Could not find project with id 60ec6bbfb98caeb87e34306e",
+                      "error_code": "project_not_found"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/workspaces/{workspace_id}/projects/{project_id}/datasets/{dataset_id}/media": {
+      "get": {
+        "tags": [
+          "Media"
+        ],
+        "summary": "Get all media entities with filter and pagination",
+        "description": "Get all media entities in the Dataset. Media entities can be video or image. The request parameters can be used to control what selection of media are returned.",
+        "operationId": "getAllMediaEntitiesWithFilterAndPagination",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "workspace_id",
+            "style": "simple",
+            "description": "The ID of the workspace of interest",
+            "schema": {
+              "type": "string",
+              "minLength": 24,
+              "maxLength": 24,
+              "example": "60d31793d5f1fb7e6e3c1a4c",
+              "description": "Mongo ID of the object"
+            },
+            "required": true
+          },
+          {
+            "in": "path",
+            "name": "project_id",
+            "style": "simple",
+            "description": "The ID of the project of interest",
+            "schema": {
+              "type": "string",
+              "minLength": 24,
+              "maxLength": 24,
+              "example": "60d31793d5f1fb7e6e3c1a4c",
+              "description": "Mongo ID of the object"
+            },
+            "required": true
+          },
+          {
+            "in": "path",
+            "name": "dataset_id",
+            "style": "simple",
+            "description": "The ID of the dataset of interest",
+            "schema": {
+              "type": "string",
+              "minLength": 24,
+              "maxLength": 24,
+              "example": "60d31793d5f1fb7e6e3c1a4c",
+              "description": "Mongo ID of the object"
+            },
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "sort_by",
+            "style": "form",
+            "description": "Field to sort by, could be name or creation_date",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "name",
+                "creation_date"
+              ]
+            }
+          },
+          {
+            "in": "query",
+            "name": "sort_direction",
+            "style": "form",
+            "description": "Sorting order, could be asc (ascending) or dsc (descending)",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "dsc"
+              ]
+            }
+          },
+          {
+            "in": "query",
+            "name": "name",
+            "style": "form",
+            "description": "Filter for names containing this string",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "annotation_status",
+            "style": "form",
+            "description": "Annotation status for the image",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "annotated",
+                "inferred",
+                "none"
+              ]
+            }
+          },
+          {
+            "in": "query",
+            "name": "labels",
+            "style": "form",
+            "description": "List of label ids used to filter the images/videos",
+            "schema": {
+              "oneOf": [
+                {
+                  "type": "string",
+                  "minLength": 24,
+                  "maxLength": 24,
+                  "example": "60d31793d5f1fb7e6e3c1a4c",
+                  "description": "Mongo ID of the object"
+                },
+                {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "minLength": 24,
+                    "maxLength": 24,
+                    "example": "60d31793d5f1fb7e6e3c1a4c",
+                    "description": "Mongo ID of the object"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "in": "query",
+            "name": "top",
+            "style": "form",
+            "explode": true,
+            "description": "How many media items to return, 10 by default",
+            "schema": {
+              "type": "string",
+              "format": "int32",
+              "pattern": "^[1-9]\\d*$"
+            }
+          },
+          {
+            "in": "query",
+            "name": "skiptoken",
+            "style": "form",
+            "description": "Id for pagination. only retrieve media with id > skiptoken",
+            "schema": {
+              "type": "string",
+              "minLength": 24,
+              "maxLength": 24,
+              "example": "60d31793d5f1fb7e6e3c1a4c",
+              "description": "Mongo ID of the object"
+            }
+          },
+          {
+            "in": "query",
+            "name": "media_type",
+            "style": "form",
+            "description": "Whether to get image or video entities",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "image",
+                "video"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The requested media entities",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "media": {
+                      "type": "array",
+                      "description": "List of media items",
+                      "items": {
+                        "oneOf": [
+                          {
+                            "type": "object",
+                            "title": "Image",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "minLength": 24,
+                                "maxLength": 24,
+                                "example": "60d31793d5f1fb7e6e3c1a4c",
+                                "description": "Mongo ID of the object"
+                              },
+                              "media_information": {
+                                "type": "object",
+                                "properties": {
+                                  "display_url": {
+                                    "type": "string",
+                                    "description": "Display URL of the image or video frame"
+                                  },
+                                  "height": {
+                                    "type": "integer",
+                                    "description": "Height of the image or video frame"
+                                  },
+                                  "width": {
+                                    "type": "integer",
+                                    "description": "Width of the image or video frame"
+                                  }
+                                }
+                              },
+                              "name": {
+                                "type": "string",
+                                "description": "Name of the image"
+                              },
+                              "state": {
+                                "type": "string",
+                                "description": "Annotation state of the image"
+                              },
+                              "thumbnail": {
+                                "type": "string",
+                                "description": "Relative URL to the media thumbnail"
+                              },
+                              "type": {
+                                "type": "string",
+                                "description": "Type of media. 'image', 'video' or 'video_frame'",
+                                "enum": [
+                                  "image"
+                                ]
+                              },
+                              "upload_time": {
+                                "type": "string",
+                                "description": "Upload time of the image"
+                              }
+                            }
+                          },
+                          {
+                            "type": "object",
+                            "title": "Video",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "minLength": 24,
+                                "maxLength": 24,
+                                "example": "60d31793d5f1fb7e6e3c1a4c",
+                                "description": "Mongo ID of the object"
+                              },
+                              "media_information": {
+                                "type": "object",
+                                "properties": {
+                                  "display_url": {
+                                    "type": "string",
+                                    "description": "Display URL of the image or video"
+                                  },
+                                  "duration": {
+                                    "type": "integer",
+                                    "description": "Duration of the video"
+                                  },
+                                  "frame_count": {
+                                    "type": "integer",
+                                    "description": "Number of frames in the video"
+                                  },
+                                  "frame_stride": {
+                                    "type": "integer",
+                                    "description": "Frame stride of the video"
+                                  },
+                                  "height": {
+                                    "type": "integer",
+                                    "description": "Height of the video"
+                                  },
+                                  "width": {
+                                    "type": "integer",
+                                    "description": "Width of the video"
+                                  }
+                                }
+                              },
+                              "name": {
+                                "type": "string",
+                                "description": "Name of the video"
+                              },
+                              "state": {
+                                "type": "string",
+                                "description": "Annotation state of the video"
+                              },
+                              "thumbnail": {
+                                "type": "string",
+                                "description": "Relative URL to the video thumbnail"
+                              },
+                              "type": {
+                                "type": "string",
+                                "description": "Type of media. 'image', 'video' or 'video_frame'",
+                                "enum": [
+                                  "video"
+                                ]
+                              },
+                              "upload_time": {
+                                "type": "string",
+                                "description": "Upload time of the video"
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    "next_page": {
+                      "type": "string",
+                      "description": "URL to the next media page"
+                    },
+                    "media_count": {
+                      "type": "object",
+                      "description": "Total number of media items in the project",
+                      "properties": {
+                        "images": {
+                          "type": "integer",
+                          "description": "Total number of images in the project"
+                        },
+                        "videos": {
+                          "type": "integer",
+                          "description": "Total number of videos in the project"
+                        }
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "Media list response": {
+                    "value": {
+                      "media": [
+                        {
+                          "id": "60e57464075ee5535d16ffd1",
+                          "media_information": {
+                            "display_url": "/api/v1.0/workspaces/60b9dc27f959563b4350b226/projects/60e57455075ee5535d16ffbc/datasets/<dataset_id>/media/images/60e57464075ee5535d16ffd1/display/full ",
+                            "height": 4608,
+                            "width": 2112
+                          },
+                          "name": "IMG_20201019_134733",
+                          "state": "none",
+                          "thumbnail": "/api/v1.0/workspaces/60b9dc27f959563b4350b226/projects/60e57455075ee5535d16ffbc/datasets/<dataset_id>/media/images/60e57464075ee5535d16ffd1/display/thumb",
+                          "type": "image",
+                          "upload_time": "2021-07-07T09:31:16.996000+00:00"
+                        },
+                        {
+                          "id": "60e57480075ee5535d16ffd2",
+                          "media_information": {
+                            "display_url": "/api/v1.0/workspaces/60b9dc27f959563b4350b226/projects/60e57455075ee5535d16ffbc/datasets/<dataset_id>/media/videos/60e57480075ee5535d16ffd2/display/stream",
+                            "duration": 44,
+                            "frame_count": 1287,
+                            "frame_stride": 29,
+                            "height": 1920,
+                            "width": 1080
+                          },
+                          "name": "VID_20201019_135006",
+                          "state": "none",
+                          "thumbnail": "/api/v1.0/workspaces/60b9dc27f959563b4350b226/projects/60e57455075ee5535d16ffbc/datasets/<dataset_id>/media/videos/60e57480075ee5535d16ffd2/display/thumb",
+                          "type": "video",
+                          "upload_time": "2021-07-07T09:31:44.778000+00:00"
+                        }
+                      ],
+                      "next_page": "/api/v1.0/workspaces/workspace_id/projects/60e57455075ee5535d16ffbc/datasets/dataset_id/media?skiptoken=60e6b3c3f1decd1e32c24d73",
+                      "media_count": {
+                        "images": 1,
+                        "videos": 1
+                      }
+                    }
+                  },
+                  "Image_list_response": {
+                    "value": {
+                      "media": [
+                        {
+                          "id": "60e57462075ee5535d16ffc3",
+                          "media_information": {
+                            "display_url": "/api/v1.0/workspaces/60b9dc27f959563b4350b226/projects/60e57455075ee5535d16ffbc/datasets/<dataset_id>/media/images/60e57462075ee5535d16ffc3/display/full ",
+                            "height": 2112,
+                            "width": 4608
+                          },
+                          "name": "IMG_20201019_134645",
+                          "state": "none",
+                          "thumbnail": "/api/v1.0/workspaces/60b9dc27f959563b4350b226/projects/60e57455075ee5535d16ffbc/datasets/<dataset_id>/media/images/60e57462075ee5535d16ffc3/display/thumb",
+                          "type": "image",
+                          "upload_time": "2021-07-07T09:31:14.145000+00:00"
+                        },
+                        {
+                          "id": "60e57462075ee5535d16ffc2",
+                          "media_information": {
+                            "display_url": "/api/v1.0/workspaces/60b9dc27f959563b4350b226/projects/60e57455075ee5535d16ffbc/datasets/<dataset_id>/media/images/60e57462075ee5535d16ffc2/display/full ",
+                            "height": 2112,
+                            "width": 4608
+                          },
+                          "name": "IMG_20201019_134648",
+                          "state": "none",
+                          "thumbnail": "/api/v1.0/workspaces/60b9dc27f959563b4350b226/projects/60e57455075ee5535d16ffbc/datasets/<dataset_id>/media/images/60e57462075ee5535d16ffc2/display/thumb",
+                          "type": "image",
+                          "upload_time": "2021-07-07T09:31:14.124000+00:00"
+                        }
+                      ],
+                      "next_page": "/api/v1.0/workspaces/workspace_id/projects/60e57455075ee5535d16ffbc/datasets/dataset_id/media?media_type=image&skiptoken=60e57464075ee5535d16ffd1",
+                      "media_count": {
+                        "images": 2
+                      }
+                    }
+                  },
+                  "Video list response": {
+                    "value": {
+                      "media": [
+                        {
+                          "id": "60e57480075ee5535d16ffd2",
+                          "media_information": {
+                            "display_url": "/api/v1.0/workspaces/60b9dc27f959563b4350b226/projects/60e57455075ee5535d16ffbc/datasets/<dataset_id>/media/videos/60e57480075ee5535d16ffd2/display/stream",
+                            "duration": 44,
+                            "frame_count": 1287,
+                            "frame_stride": 29,
+                            "height": 1920,
+                            "width": 1080
+                          },
+                          "name": "VID_20201019_135006",
+                          "state": "none",
+                          "thumbnail": "/api/v1.0/workspaces/60b9dc27f959563b4350b226/projects/60e57455075ee5535d16ffbc/datasets/<dataset_id>/media/videos/60e57480075ee5535d16ffd2/display/thumb",
+                          "type": "video",
+                          "upload_time": "2021-07-07T09:31:44.778000+00:00"
+                        },
+                        {
+                          "id": "60e6b3c3f1decd1e32c24d73",
+                          "media_information": {
+                            "display_url": "/api/v1.0/workspaces/60b9dc27f959563b4350b226/projects/60e57455075ee5535d16ffbc/datasets/<dataset_id>/media/videos/60e6b3c3f1decd1e32c24d73/display/stream",
+                            "duration": 1388,
+                            "frame_count": 13883,
+                            "frame_stride": 10,
+                            "height": 480,
+                            "width": 640
+                          },
+                          "name": "desk_video",
+                          "state": "none",
+                          "thumbnail": "/api/v1.0/workspaces/60b9dc27f959563b4350b226/projects/60e57455075ee5535d16ffbc/datasets/<dataset_id>/media/videos/60e6b3c3f1decd1e32c24d73/display/thumb",
+                          "type": "video",
+                          "upload_time": "2021-07-08T08:13:55.907000+00:00"
+                        }
+                      ],
+                      "next_page": "/api/v1.0/workspaces/workspace_id/projects/60e57455075ee5535d16ffbc/datasets/dataset_id/media?media_type=video&skiptoken=60e6b3c3f1decd1e32c24d73",
+                      "media_count": {
+                        "videos": 2
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Object not found. See the examples for details.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": [
+                    "http_status",
+                    "message",
+                    "error_code"
+                  ],
+                  "properties": {
+                    "http_status": {
+                      "type": "integer",
+                      "enum": [
+                        400,
+                        404,
+                        409,
+                        "412 415",
+                        500,
+                        501,
+                        503
+                      ]
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Message from server"
+                    },
+                    "error_code": {
+                      "type": "string",
+                      "description": "Error code from server"
+                    }
+                  }
+                },
+                "examples": {
+                  "Workspace not found response": {
+                    "value": {
+                      "http_status": 404,
+                      "message": "Could not find workspace with id 60ec6bbfb98caeb87e34306e",
+                      "error_code": "workspace_not_found"
+                    }
+                  },
+                  "Project not found response": {
+                    "value": {
+                      "http_status": 404,
+                      "message": "Could not find project with id 60ec6bbfb98caeb87e34306e",
+                      "error_code": "project_not_found"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/workspaces/{workspace_id}/projects/{project_id}/datasets/{dataset_id}/media/images": {
+      "post": {
+        "tags": [
+          "Media"
+        ],
+        "summary": "Upload an image",
+        "description": "Upload an image to a dataset. Allowed formats are .jpg, .jpeg, .bmp, .png, .tif and .tiff. Height and width of the images must be between 32 and 20000 pixels. By specifying upload_info, labels can be directly applied to the uploaded image. This is currently only allowed for a classification project.",
+        "operationId": "uploadImage",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "workspace_id",
+            "style": "simple",
+            "description": "The ID of the workspace of interest",
+            "schema": {
+              "type": "string",
+              "minLength": 24,
+              "maxLength": 24,
+              "example": "60d31793d5f1fb7e6e3c1a4c",
+              "description": "Mongo ID of the object"
+            },
+            "required": true
+          },
+          {
+            "in": "path",
+            "name": "project_id",
+            "style": "simple",
+            "description": "The ID of the project of interest",
+            "schema": {
+              "type": "string",
+              "minLength": 24,
+              "maxLength": 24,
+              "example": "60d31793d5f1fb7e6e3c1a4c",
+              "description": "Mongo ID of the object"
+            },
+            "required": true
+          },
+          {
+            "in": "path",
+            "name": "dataset_id",
+            "style": "simple",
+            "description": "The ID of the dataset of interest",
+            "schema": {
+              "type": "string",
+              "minLength": 24,
+              "maxLength": 24,
+              "example": "60d31793d5f1fb7e6e3c1a4c",
+              "description": "Mongo ID of the object"
+            },
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "required": [
+                  "file"
+                ],
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "The image file to be uploaded."
+                  },
+                  "upload_info": {
+                    "type": "string",
+                    "description": "IDs of the labels to apply to the image. Uses the format of a json decodable string. Example: {\"label_ids\":[\"613776cec8223e455a88383d\", \"613776cec8223e455a88383e\"]}"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The image has been uploaded",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Image",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "minLength": 24,
+                      "maxLength": 24,
+                      "example": "60d31793d5f1fb7e6e3c1a4c",
+                      "description": "Mongo ID of the object"
+                    },
+                    "media_information": {
+                      "type": "object",
+                      "properties": {
+                        "display_url": {
+                          "type": "string",
+                          "description": "Display URL of the image or video frame"
+                        },
+                        "height": {
+                          "type": "integer",
+                          "description": "Height of the image or video frame"
+                        },
+                        "width": {
+                          "type": "integer",
+                          "description": "Width of the image or video frame"
+                        }
+                      }
+                    },
+                    "name": {
+                      "type": "string",
+                      "description": "Name of the image"
+                    },
+                    "state": {
+                      "type": "string",
+                      "description": "Annotation state of the image"
+                    },
+                    "thumbnail": {
+                      "type": "string",
+                      "description": "Relative URL to the media thumbnail"
+                    },
+                    "type": {
+                      "type": "string",
+                      "description": "Type of media. 'image', 'video' or 'video_frame'",
+                      "enum": [
+                        "image"
+                      ]
+                    },
+                    "upload_time": {
+                      "type": "string",
+                      "description": "Upload time of the image"
+                    }
+                  }
+                },
+                "examples": {
+                  "Image upload response": {
+                    "value": {
+                      "id": "60db54c8b95e14fcbb24bc04",
+                      "media_information": {
+                        "display_url": "/v2/projects/60d3549a3e6080a926e5ef12/media/images/60db54c8b95e14fcbb24bc04/display/full",
+                        "height": 1213,
+                        "width": 2269
+                      },
+                      "name": "Course completion",
+                      "state": "none",
+                      "thumbnail": "/v2/projects/60d3549a3e6080a926e5ef12/media/images/60db54c8b95e14fcbb24bc04/display/thumb",
+                      "type": "image",
+                      "upload_time": "2021-06-29T17:13:44.719000+00:00"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "No file provided",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": [
+                    "http_status",
+                    "message",
+                    "error_code"
+                  ],
+                  "properties": {
+                    "http_status": {
+                      "type": "integer",
+                      "enum": [
+                        400,
+                        404,
+                        409,
+                        "412 415",
+                        500,
+                        501,
+                        503
+                      ]
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Message from server"
+                    },
+                    "error_code": {
+                      "type": "string",
+                      "description": "Error code from server"
+                    }
+                  }
+                },
+                "examples": {
+                  "Invalid media response": {
+                    "value": {
+                      "http_status": 400,
+                      "message": "No file provided",
+                      "error_code": "bad_request"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Object not found. See the examples for details.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": [
+                    "http_status",
+                    "message",
+                    "error_code"
+                  ],
+                  "properties": {
+                    "http_status": {
+                      "type": "integer",
+                      "enum": [
+                        400,
+                        404,
+                        409,
+                        "412 415",
+                        500,
+                        501,
+                        503
+                      ]
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Message from server"
+                    },
+                    "error_code": {
+                      "type": "string",
+                      "description": "Error code from server"
+                    }
+                  }
+                },
+                "examples": {
+                  "Workspace not found response": {
+                    "value": {
+                      "http_status": 404,
+                      "message": "Could not find workspace with id 60ec6bbfb98caeb87e34306e",
+                      "error_code": "workspace_not_found"
+                    }
+                  },
+                  "Project not found response": {
+                    "value": {
+                      "http_status": 404,
+                      "message": "Could not find project with id 60ec6bbfb98caeb87e34306e",
+                      "error_code": "project_not_found"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Payload too large",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": [
+                    "http_status",
+                    "message",
+                    "error_code"
+                  ],
+                  "properties": {
+                    "http_status": {
+                      "type": "integer",
+                      "enum": [
+                        400,
+                        404,
+                        409,
+                        "412 415",
+                        500,
+                        501,
+                        503
+                      ]
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Message from server"
+                    },
+                    "error_code": {
+                      "type": "string",
+                      "description": "Error code from server"
+                    }
+                  }
+                },
+                "examples": {
+                  "Payload too large response": {
+                    "value": {
+                      "http_status": 413,
+                      "message": "Request too large: exceeding 8 GB is not allowed.",
+                      "error_code": "payload_too_large"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Invalid media",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": [
+                    "http_status",
+                    "message",
+                    "error_code"
+                  ],
+                  "properties": {
+                    "http_status": {
+                      "type": "integer",
+                      "enum": [
+                        400,
+                        404,
+                        409,
+                        "412 415",
+                        500,
+                        501,
+                        503
+                      ]
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Message from server"
+                    },
+                    "error_code": {
+                      "type": "string",
+                      "description": "Error code from server"
+                    }
+                  }
+                },
+                "examples": {
+                  "Invalid media response": {
+                    "value": {
+                      "http_status": 415,
+                      "message": "Could not upload ``. The server was not able to interpret it.",
+                      "error_code": "invalid_media"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/workspaces/{workspace_id}/projects/{project_id}/datasets/{dataset_id}/media/videos": {
+      "post": {
+        "tags": [
+          "Media"
+        ],
+        "summary": "Upload a video",
+        "description": "Upload a video to a dataset. Allowed formats are .mp4, .avi, .mkv and .mov. The maximum resolution for videos is 8K and the file may not be larger than 8GB. By specifying upload_info, labels can be directly applied to the uploaded video. This is currently only allowed for a classification project.",
+        "operationId": "uploadVideo",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "workspace_id",
+            "style": "simple",
+            "description": "The ID of the workspace of interest",
+            "schema": {
+              "type": "string",
+              "minLength": 24,
+              "maxLength": 24,
+              "example": "60d31793d5f1fb7e6e3c1a4c",
+              "description": "Mongo ID of the object"
+            },
+            "required": true
+          },
+          {
+            "in": "path",
+            "name": "project_id",
+            "style": "simple",
+            "description": "The ID of the project of interest",
+            "schema": {
+              "type": "string",
+              "minLength": 24,
+              "maxLength": 24,
+              "example": "60d31793d5f1fb7e6e3c1a4c",
+              "description": "Mongo ID of the object"
+            },
+            "required": true
+          },
+          {
+            "in": "path",
+            "name": "dataset_id",
+            "style": "simple",
+            "description": "The ID of the dataset of interest",
+            "schema": {
+              "type": "string",
+              "minLength": 24,
+              "maxLength": 24,
+              "example": "60d31793d5f1fb7e6e3c1a4c",
+              "description": "Mongo ID of the object"
+            },
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "required": [
+                  "file"
+                ],
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "The video file to be uploaded."
+                  },
+                  "upload_info": {
+                    "type": "string",
+                    "description": "IDs of the labels to apply to the video. Uses the format of a json decodable string. Labels are applied to all video frames. Example: *{\"label_ids\":[\"613776cec8223e455a88383d\", \"613776cec8223e455a88383e\"]}*. "
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Video has been uploaded",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Video",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "minLength": 24,
+                      "maxLength": 24,
+                      "example": "60d31793d5f1fb7e6e3c1a4c",
+                      "description": "Mongo ID of the object"
+                    },
+                    "media_information": {
+                      "type": "object",
+                      "properties": {
+                        "display_url": {
+                          "type": "string",
+                          "description": "Display URL of the image or video"
+                        },
+                        "duration": {
+                          "type": "integer",
+                          "description": "Duration of the video"
+                        },
+                        "frame_count": {
+                          "type": "integer",
+                          "description": "Number of frames in the video"
+                        },
+                        "frame_stride": {
+                          "type": "integer",
+                          "description": "Frame stride of the video"
+                        },
+                        "height": {
+                          "type": "integer",
+                          "description": "Height of the video"
+                        },
+                        "width": {
+                          "type": "integer",
+                          "description": "Width of the video"
+                        }
+                      }
+                    },
+                    "name": {
+                      "type": "string",
+                      "description": "Name of the video"
+                    },
+                    "state": {
+                      "type": "string",
+                      "description": "Annotation state of the video"
+                    },
+                    "thumbnail": {
+                      "type": "string",
+                      "description": "Relative URL to the video thumbnail"
+                    },
+                    "type": {
+                      "type": "string",
+                      "description": "Type of media. 'image', 'video' or 'video_frame'",
+                      "enum": [
+                        "video"
+                      ]
+                    },
+                    "upload_time": {
+                      "type": "string",
+                      "description": "Upload time of the video"
+                    }
+                  }
+                },
+                "examples": {
+                  "Image upload response": {
+                    "value": {
+                      "id": "60db54c8b95e14fcbb24bc04",
+                      "media_information": {
+                        "display_url": "/v2/projects/60d3549a3e6080a926e5ef12/media/images/60db54c8b95e14fcbb24bc04/display/full",
+                        "height": 1213,
+                        "width": 2269
+                      },
+                      "name": "Course completion",
+                      "state": "none",
+                      "thumbnail": "/v2/projects/60d3549a3e6080a926e5ef12/media/images/60db54c8b95e14fcbb24bc04/display/thumb",
+                      "type": "image",
+                      "upload_time": "2021-06-29T17:13:44.719000+00:00"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "No file provided",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": [
+                    "http_status",
+                    "message",
+                    "error_code"
+                  ],
+                  "properties": {
+                    "http_status": {
+                      "type": "integer",
+                      "enum": [
+                        400,
+                        404,
+                        409,
+                        "412 415",
+                        500,
+                        501,
+                        503
+                      ]
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Message from server"
+                    },
+                    "error_code": {
+                      "type": "string",
+                      "description": "Error code from server"
+                    }
+                  }
+                },
+                "examples": {
+                  "Invalid media response": {
+                    "value": {
+                      "http_status": 400,
+                      "message": "No file provided",
+                      "error_code": "bad_request"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Object not found. See the examples for details.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": [
+                    "http_status",
+                    "message",
+                    "error_code"
+                  ],
+                  "properties": {
+                    "http_status": {
+                      "type": "integer",
+                      "enum": [
+                        400,
+                        404,
+                        409,
+                        "412 415",
+                        500,
+                        501,
+                        503
+                      ]
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Message from server"
+                    },
+                    "error_code": {
+                      "type": "string",
+                      "description": "Error code from server"
+                    }
+                  }
+                },
+                "examples": {
+                  "Workspace not found response": {
+                    "value": {
+                      "http_status": 404,
+                      "message": "Could not find workspace with id 60ec6bbfb98caeb87e34306e",
+                      "error_code": "workspace_not_found"
+                    }
+                  },
+                  "Project not found response": {
+                    "value": {
+                      "http_status": 404,
+                      "message": "Could not find project with id 60ec6bbfb98caeb87e34306e",
+                      "error_code": "project_not_found"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Payload too large",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": [
+                    "http_status",
+                    "message",
+                    "error_code"
+                  ],
+                  "properties": {
+                    "http_status": {
+                      "type": "integer",
+                      "enum": [
+                        400,
+                        404,
+                        409,
+                        "412 415",
+                        500,
+                        501,
+                        503
+                      ]
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Message from server"
+                    },
+                    "error_code": {
+                      "type": "string",
+                      "description": "Error code from server"
+                    }
+                  }
+                },
+                "examples": {
+                  "Payload too large response": {
+                    "value": {
+                      "http_status": 413,
+                      "message": "Request too large: exceeding 8 GB is not allowed.",
+                      "error_code": "payload_too_large"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Invalid media",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": [
+                    "http_status",
+                    "message",
+                    "error_code"
+                  ],
+                  "properties": {
+                    "http_status": {
+                      "type": "integer",
+                      "enum": [
+                        400,
+                        404,
+                        409,
+                        "412 415",
+                        500,
+                        501,
+                        503
+                      ]
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Message from server"
+                    },
+                    "error_code": {
+                      "type": "string",
+                      "description": "Error code from server"
+                    }
+                  }
+                },
+                "examples": {
+                  "Invalid media response": {
+                    "value": {
+                      "http_status": 415,
+                      "message": "Could not upload ``. The server was not able to interpret it.",
+                      "error_code": "invalid_media"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/workspaces/{workspace_id}/projects/{project_id}/datasets/{dataset_id}/media/images/{image_id}": {
+      "get": {
+        "tags": [
+          "Media"
+        ],
+        "summary": "Get image detail",
+        "description": "Retrieve the detailed info of an image.",
+        "operationId": "getImageDetail",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "workspace_id",
+            "style": "simple",
+            "description": "The ID of the workspace of interest",
+            "schema": {
+              "type": "string",
+              "minLength": 24,
+              "maxLength": 24,
+              "example": "60d31793d5f1fb7e6e3c1a4c",
+              "description": "Mongo ID of the object"
+            },
+            "required": true
+          },
+          {
+            "in": "path",
+            "name": "project_id",
+            "style": "simple",
+            "description": "The ID of the project of interest",
+            "schema": {
+              "type": "string",
+              "minLength": 24,
+              "maxLength": 24,
+              "example": "60d31793d5f1fb7e6e3c1a4c",
+              "description": "Mongo ID of the object"
+            },
+            "required": true
+          },
+          {
+            "in": "path",
+            "name": "dataset_id",
+            "style": "simple",
+            "description": "The ID of the dataset of interest",
+            "schema": {
+              "type": "string",
+              "minLength": 24,
+              "maxLength": 24,
+              "example": "60d31793d5f1fb7e6e3c1a4c",
+              "description": "Mongo ID of the object"
+            },
+            "required": true
+          },
+          {
+            "in": "path",
+            "name": "image_id",
+            "style": "simple",
+            "description": "The ID of the image of interest",
+            "schema": {
+              "type": "string",
+              "minLength": 24,
+              "maxLength": 24,
+              "example": "60d31793d5f1fb7e6e3c1a4c",
+              "description": "Mongo ID of the object"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The detailed info of the requested image",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Image",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "minLength": 24,
+                      "maxLength": 24,
+                      "example": "60d31793d5f1fb7e6e3c1a4c",
+                      "description": "Mongo ID of the object"
+                    },
+                    "media_information": {
+                      "type": "object",
+                      "properties": {
+                        "display_url": {
+                          "type": "string",
+                          "description": "Display URL of the image or video frame"
+                        },
+                        "height": {
+                          "type": "integer",
+                          "description": "Height of the image or video frame"
+                        },
+                        "width": {
+                          "type": "integer",
+                          "description": "Width of the image or video frame"
+                        }
+                      }
+                    },
+                    "name": {
+                      "type": "string",
+                      "description": "Name of the image"
+                    },
+                    "state": {
+                      "type": "string",
+                      "description": "Annotation state of the image"
+                    },
+                    "thumbnail": {
+                      "type": "string",
+                      "description": "Relative URL to the media thumbnail"
+                    },
+                    "type": {
+                      "type": "string",
+                      "description": "Type of media. 'image', 'video' or 'video_frame'",
+                      "enum": [
+                        "image"
+                      ]
+                    },
+                    "upload_time": {
+                      "type": "string",
+                      "description": "Upload time of the image"
+                    }
+                  }
+                },
+                "examples": {
+                  "Get image detail": {
+                    "value": {
+                      "id": "60db54c8b95e14fcbb24bc04",
+                      "media_information": {
+                        "display_url": "/v2/projects/60d3549a3e6080a926e5ef12/media/images/60db54c8b95e14fcbb24bc04/display/full",
+                        "height": 1213,
+                        "width": 2269
+                      },
+                      "name": "Course completion",
+                      "state": "none",
+                      "thumbnail": "/v2/projects/60d3549a3e6080a926e5ef12/media/images/60db54c8b95e14fcbb24bc04/display/thumb",
+                      "type": "image",
+                      "upload_time": "2021-06-29T17:13:44.719000+00:00"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Object not found. See the examples for details.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": [
+                    "http_status",
+                    "message",
+                    "error_code"
+                  ],
+                  "properties": {
+                    "http_status": {
+                      "type": "integer",
+                      "enum": [
+                        400,
+                        404,
+                        409,
+                        "412 415",
+                        500,
+                        501,
+                        503
+                      ]
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Message from server"
+                    },
+                    "error_code": {
+                      "type": "string",
+                      "description": "Error code from server"
+                    }
+                  }
+                },
+                "examples": {
+                  "Workspace not found response": {
+                    "value": {
+                      "http_status": 404,
+                      "message": "Could not find workspace with id 60ec6bbfb98caeb87e34306e",
+                      "error_code": "workspace_not_found"
+                    }
+                  },
+                  "Image not found response": {
+                    "value": {
+                      "http_status": 404,
+                      "message": "Image with id 60ec6bbfb98caeb87e34306e not found",
+                      "error_code": "image_not_found"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/workspaces/{workspace_id}/projects/{project_id}/datasets/{dataset_id}/media/videos/{video_id}": {
+      "get": {
+        "tags": [
+          "Media"
+        ],
+        "summary": "Get video detail",
+        "description": "Retrieve the detailed info of a video.",
+        "operationId": "getVideoDetail",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "workspace_id",
+            "style": "simple",
+            "description": "The ID of the workspace of interest",
+            "schema": {
+              "type": "string",
+              "minLength": 24,
+              "maxLength": 24,
+              "example": "60d31793d5f1fb7e6e3c1a4c",
+              "description": "Mongo ID of the object"
+            },
+            "required": true
+          },
+          {
+            "in": "path",
+            "name": "project_id",
+            "style": "simple",
+            "description": "The ID of the project of interest",
+            "schema": {
+              "type": "string",
+              "minLength": 24,
+              "maxLength": 24,
+              "example": "60d31793d5f1fb7e6e3c1a4c",
+              "description": "Mongo ID of the object"
+            },
+            "required": true
+          },
+          {
+            "in": "path",
+            "name": "dataset_id",
+            "style": "simple",
+            "description": "The ID of the dataset of interest",
+            "schema": {
+              "type": "string",
+              "minLength": 24,
+              "maxLength": 24,
+              "example": "60d31793d5f1fb7e6e3c1a4c",
+              "description": "Mongo ID of the object"
+            },
+            "required": true
+          },
+          {
+            "in": "path",
+            "name": "video_id",
+            "style": "simple",
+            "description": "The ID of the video of interest",
+            "schema": {
+              "type": "string",
+              "minLength": 24,
+              "maxLength": 24,
+              "example": "60d31793d5f1fb7e6e3c1a4c",
+              "description": "Mongo ID of the object"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The requested detailed video info",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Video",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "minLength": 24,
+                      "maxLength": 24,
+                      "example": "60d31793d5f1fb7e6e3c1a4c",
+                      "description": "Mongo ID of the object"
+                    },
+                    "media_information": {
+                      "type": "object",
+                      "properties": {
+                        "display_url": {
+                          "type": "string",
+                          "description": "Display URL of the image or video"
+                        },
+                        "duration": {
+                          "type": "integer",
+                          "description": "Duration of the video"
+                        },
+                        "frame_count": {
+                          "type": "integer",
+                          "description": "Number of frames in the video"
+                        },
+                        "frame_stride": {
+                          "type": "integer",
+                          "description": "Frame stride of the video"
+                        },
+                        "height": {
+                          "type": "integer",
+                          "description": "Height of the video"
+                        },
+                        "width": {
+                          "type": "integer",
+                          "description": "Width of the video"
+                        }
+                      }
+                    },
+                    "name": {
+                      "type": "string",
+                      "description": "Name of the video"
+                    },
+                    "state": {
+                      "type": "string",
+                      "description": "Annotation state of the video"
+                    },
+                    "thumbnail": {
+                      "type": "string",
+                      "description": "Relative URL to the video thumbnail"
+                    },
+                    "type": {
+                      "type": "string",
+                      "description": "Type of media. 'image', 'video' or 'video_frame'",
+                      "enum": [
+                        "video"
+                      ]
+                    },
+                    "upload_time": {
+                      "type": "string",
+                      "description": "Upload time of the video"
+                    }
+                  }
+                },
+                "examples": {
+                  "Get image detail": {
+                    "value": {
+                      "id": "60e6b3c3f1decd1e32c24d73",
+                      "media_information": {
+                        "display_url": "/v2/projects/60e57455075ee5535d16ffbc/media/videos/60e6b3c3f1decd1e32c24d73/display/stream",
+                        "duration": 1388,
+                        "frame_count": 13883,
+                        "frame_stride": 10,
+                        "height": 480,
+                        "width": 640
+                      },
+                      "name": "single_video",
+                      "state": "none",
+                      "thumbnail": "/v2/projects/60e57455075ee5535d16ffbc/media/videos/60e6b3c3f1decd1e32c24d73/display/thumb",
+                      "type": "video",
+                      "upload_time": "2021-07-08T08:13:55.907000+00:00"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Object not found. See the examples for details.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": [
+                    "http_status",
+                    "message",
+                    "error_code"
+                  ],
+                  "properties": {
+                    "http_status": {
+                      "type": "integer",
+                      "enum": [
+                        400,
+                        404,
+                        409,
+                        "412 415",
+                        500,
+                        501,
+                        503
+                      ]
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Message from server"
+                    },
+                    "error_code": {
+                      "type": "string",
+                      "description": "Error code from server"
+                    }
+                  }
+                },
+                "examples": {
+                  "Workspace not found response": {
+                    "value": {
+                      "http_status": 404,
+                      "message": "Could not find workspace with id 60ec6bbfb98caeb87e34306e",
+                      "error_code": "workspace_not_found"
+                    }
+                  },
+                  "Video not found response": {
+                    "value": {
+                      "http_status": 404,
+                      "message": "Video with id 60ec6bbfb98caeb87e34306e not found",
+                      "error_code": "video_not_found"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/workspaces/{workspace_id}/projects/{project_id}/datasets/{dataset_id}/media/images/{image_id}/annotations": {
+      "post": {
+        "tags": [
+          "Annotations"
+        ],
+        "summary": "Create an annotation for an image",
+        "description": "Create an annotation for an image from request data.",
+        "operationId": "CreateImageAnnotation",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "workspace_id",
+            "style": "simple",
+            "description": "The ID of the workspace of interest",
+            "schema": {
+              "type": "string",
+              "minLength": 24,
+              "maxLength": 24,
+              "example": "60d31793d5f1fb7e6e3c1a4c",
+              "description": "Mongo ID of the object"
+            },
+            "required": true
+          },
+          {
+            "in": "path",
+            "name": "project_id",
+            "style": "simple",
+            "description": "The ID of the project of interest",
+            "schema": {
+              "type": "string",
+              "minLength": 24,
+              "maxLength": 24,
+              "example": "60d31793d5f1fb7e6e3c1a4c",
+              "description": "Mongo ID of the object"
+            },
+            "required": true
+          },
+          {
+            "in": "path",
+            "name": "dataset_id",
+            "style": "simple",
+            "description": "The ID of the dataset of interest",
+            "schema": {
+              "type": "string",
+              "minLength": 24,
+              "maxLength": 24,
+              "example": "60d31793d5f1fb7e6e3c1a4c",
+              "description": "Mongo ID of the object"
+            },
+            "required": true
+          },
+          {
+            "in": "path",
+            "name": "image_id",
+            "style": "simple",
+            "description": "The ID of the image of interest",
+            "schema": {
+              "type": "string",
+              "minLength": 24,
+              "maxLength": 24,
+              "example": "60d31793d5f1fb7e6e3c1a4c",
+              "description": "Mongo ID of the object"
+            },
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "annotations"
+                ],
+                "properties": {
+                  "annotations": {
+                    "description": "List of annotations",
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "required": [
+                        "shape",
+                        "labels"
+                      ],
+                      "properties": {
+                        "shape": {
+                          "oneOf": [
+                            {
+                              "required": [
+                                "type",
+                                "x",
+                                "y",
+                                "width",
+                                "height"
+                              ],
+                              "type": "object",
+                              "title": "Rectangle",
+                              "properties": {
+                                "type": {
+                                  "type": "string",
+                                  "enum": [
+                                    "RECTANGLE"
+                                  ],
+                                  "description": "Type of the shape."
+                                },
+                                "x": {
+                                  "type": "number",
+                                  "description": "x-coordinate of the left side of the rectangle",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "y": {
+                                  "type": "number",
+                                  "description": "y-coordinate of the top of the rectangle",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "width": {
+                                  "type": "number",
+                                  "description": "Width of the rectangle",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "height": {
+                                  "type": "number",
+                                  "description": "Height of the rectangle",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                }
+                              },
+                              "example": {
+                                "type": "RECTANGLE",
+                                "x": 0.635174036,
+                                "y": 0.393743843,
+                                "width": 0.175549313,
+                                "height": 0.204229221
+                              }
+                            },
+                            {
+                              "required": [
+                                "type",
+                                "points"
+                              ],
+                              "type": "object",
+                              "title": "Polygon",
+                              "properties": {
+                                "type": {
+                                  "type": "string",
+                                  "enum": [
+                                    "POLYGON"
+                                  ],
+                                  "description": "Type of the shape."
+                                },
+                                "points": {
+                                  "type": "array",
+                                  "description": "Array of points that define the polygon.",
+                                  "items": {
+                                    "title": "Point",
+                                    "required": [
+                                      "x",
+                                      "y"
+                                    ],
+                                    "type": "object",
+                                    "properties": {
+                                      "x": {
+                                        "type": "number",
+                                        "minimum": 0,
+                                        "maximum": 1
+                                      },
+                                      "y": {
+                                        "type": "number",
+                                        "minimum": 0,
+                                        "maximum": 1
+                                      }
+                                    },
+                                    "example": {
+                                      "x": 0.1,
+                                      "y": 0.1
+                                    }
+                                  }
+                                }
+                              },
+                              "example": {
+                                "type": "POLYGON",
+                                "point": [
+                                  {
+                                    "x": 0.1,
+                                    "y": 0.1
+                                  },
+                                  {
+                                    "x": 0.2,
+                                    "y": 0.2
+                                  },
+                                  {
+                                    "x": 0.1,
+                                    "y": 0.2
+                                  },
+                                  {
+                                    "x": 0.1,
+                                    "y": 0.1
+                                  }
+                                ]
+                              }
+                            },
+                            {
+                              "required": [
+                                "type",
+                                "x",
+                                "y",
+                                "width",
+                                "height"
+                              ],
+                              "type": "object",
+                              "title": "Ellipse",
+                              "properties": {
+                                "type": {
+                                  "type": "string",
+                                  "enum": [
+                                    "ELLIPSE"
+                                  ],
+                                  "description": "Type of the shape."
+                                },
+                                "x": {
+                                  "type": "number",
+                                  "description": "Lowest x-coordinate of the ellipse"
+                                },
+                                "y": {
+                                  "type": "number",
+                                  "description": "Lowest y-coordinate of the ellipse"
+                                },
+                                "width": {
+                                  "type": "number",
+                                  "description": "Width of the ellipse"
+                                },
+                                "height": {
+                                  "type": "number",
+                                  "description": "Height of the ellipse"
+                                }
+                              },
+                              "example": {
+                                "type": "ELLIPSE",
+                                "x": 0.635174036,
+                                "y": 0.393743843,
+                                "width": 0.175549313,
+                                "height": 0.204229221
+                              }
+                            }
+                          ]
+                        },
+                        "labels": {
+                          "description": "List of labels",
+                          "type": "array",
+                          "minItems": 1,
+                          "items": {
+                            "type": "object",
+                            "required": [
+                              "id"
+                            ],
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "minLength": 24,
+                                "maxLength": 24,
+                                "example": "60d31793d5f1fb7e6e3c1a4c",
+                                "description": "Mongo ID of the object"
+                              },
+                              "probability": {
+                                "title": "Probability",
+                                "type": "number",
+                                "format": "float",
+                                "description": "Estimated probability of a prediction. For annotations, this is set to 1."
+                              },
+                              "name": {
+                                "type": "string",
+                                "description": "Name of the label"
+                              },
+                              "color": {
+                                "type": "string",
+                                "description": "Color of the label"
+                              },
+                              "source": {
+                                "type": "object",
+                                "properties": {
+                                  "id": {
+                                    "type": "string",
+                                    "description": "Not used yet"
+                                  },
+                                  "type": {
+                                    "type": "string",
+                                    "description": "Not used yet"
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        },
+                        "id": {
+                          "type": "string",
+                          "example": "e42cf382-5f7b-4fda-980a-fa0fab00243c",
+                          "description": "A UUID, used to identify an annotation."
+                        }
+                      }
+                    }
+                  },
+                  "media_identifier": {
+                    "type": "object",
+                    "properties": {
+                      "image_id": {
+                        "type": "string",
+                        "minLength": 24,
+                        "maxLength": 24,
+                        "example": "60d31793d5f1fb7e6e3c1a4c",
+                        "description": "Mongo ID of the object"
+                      },
+                      "type": {
+                        "type": "string",
+                        "enum": [
+                          "image"
+                        ],
+                        "description": "Type of media. 'image' for images, 'video' for videos."
+                      }
+                    }
+                  },
+                  "modified": {
+                    "type": "string",
+                    "description": "Modification date"
+                  }
+                }
+              },
+              "examples": {
+                "Creating an annotation": {
+                  "value": {
+                    "media_identifier": {
+                      "type": "image",
+                      "image_id": "6138af293b7b11505c43f2bc"
+                    },
+                    "annotations": [
+                      {
+                        "id": "6b3b8453-92a2-41ef-9725-63badb218504",
+                        "shape": {
+                          "type": "RECTANGLE",
+                          "x": 0.255742950750042,
+                          "y": 0.408770885812825,
+                          "width": 0.2878743820878162,
+                          "height": 0.3416241235314749
+                        },
+                        "labels": [
+                          {
+                            "id": "61387685df33ae8280c33d9d",
+                            "name": "test",
+                            "color": "#26518eff",
+                            "probability": 1,
+                            "source": {
+                              "id": "N/A",
+                              "type": "User"
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Annotation successfully uploaded for image",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "annotations": {
+                      "description": "List of annotations",
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "example": "e42cf382-5f7b-4fda-980a-fa0fab00243c",
+                            "description": "A UUID, used to identify an annotation."
+                          },
+                          "shape": {
+                            "oneOf": [
+                              {
+                                "type": "object",
+                                "title": "Rectangle",
+                                "properties": {
+                                  "type": {
+                                    "type": "string",
+                                    "enum": [
+                                      "RECTANGLE"
+                                    ],
+                                    "description": "Type of the shape."
+                                  },
+                                  "x": {
+                                    "type": "number",
+                                    "description": "x-coordinate of the left side of the rectangle"
+                                  },
+                                  "y": {
+                                    "type": "number",
+                                    "description": "y-coordinate of the top of the rectangle"
+                                  },
+                                  "width": {
+                                    "type": "number",
+                                    "description": "Width of the rectangle"
+                                  },
+                                  "height": {
+                                    "type": "number",
+                                    "description": "Height of the rectangle"
+                                  }
+                                },
+                                "example": {
+                                  "type": "RECTANGLE",
+                                  "x": 0.635174036,
+                                  "y": 0.393743843,
+                                  "width": 0.175549313,
+                                  "height": 0.204229221
+                                }
+                              },
+                              {
+                                "type": "object",
+                                "title": "Polygon",
+                                "properties": {
+                                  "type": {
+                                    "type": "string",
+                                    "enum": [
+                                      "POLYGON"
+                                    ],
+                                    "description": "Type of the shape."
+                                  },
+                                  "points": {
+                                    "type": "array",
+                                    "description": "Array of points that define the polygon.",
+                                    "items": {
+                                      "title": "Point",
+                                      "type": "object",
+                                      "properties": {
+                                        "x": {
+                                          "type": "number"
+                                        },
+                                        "y": {
+                                          "type": "number"
+                                        }
+                                      },
+                                      "example": {
+                                        "x": 0.1,
+                                        "y": 0.1
+                                      }
+                                    }
+                                  }
+                                },
+                                "example": {
+                                  "type": "POLYGON",
+                                  "point": [
+                                    {
+                                      "x": 0.1,
+                                      "y": 0.1
+                                    },
+                                    {
+                                      "x": 0.2,
+                                      "y": 0.2
+                                    },
+                                    {
+                                      "x": 0.1,
+                                      "y": 0.2
+                                    },
+                                    {
+                                      "x": 0.1,
+                                      "y": 0.1
+                                    }
+                                  ]
+                                }
+                              },
+                              {
+                                "type": "object",
+                                "title": "Ellipse",
+                                "properties": {
+                                  "type": {
+                                    "type": "string",
+                                    "enum": [
+                                      "ELLIPSE"
+                                    ],
+                                    "description": "Type of the shape."
+                                  },
+                                  "x": {
+                                    "type": "number",
+                                    "description": "Lowest x-coordinate of the ellipse"
+                                  },
+                                  "y": {
+                                    "type": "number",
+                                    "description": "Lowest y-coordinate of the ellipse"
+                                  },
+                                  "width": {
+                                    "type": "number",
+                                    "description": "Width of the ellipse"
+                                  },
+                                  "height": {
+                                    "type": "number",
+                                    "description": "Height of the ellipse"
+                                  }
+                                },
+                                "example": {
+                                  "type": "ELLIPSE",
+                                  "x": 0.635174036,
+                                  "y": 0.393743843,
+                                  "width": 0.175549313,
+                                  "height": 0.204229221
+                                }
+                              }
+                            ]
+                          },
+                          "labels": {
+                            "description": "List of labels",
+                            "type": "array",
+                            "minItems": 1,
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "id": {
+                                  "type": "string",
+                                  "minLength": 24,
+                                  "maxLength": 24,
+                                  "example": "60d31793d5f1fb7e6e3c1a4c",
+                                  "description": "Mongo ID of the object"
+                                },
+                                "probability": {
+                                  "title": "Probability",
+                                  "type": "number",
+                                  "format": "float",
+                                  "description": "Estimated probability of a prediction. For annotations, this is set to 1."
+                                },
+                                "name": {
+                                  "type": "string",
+                                  "description": "Name of the label"
+                                },
+                                "color": {
+                                  "type": "string",
+                                  "description": "Color of the label"
+                                },
+                                "source": {
+                                  "type": "object",
+                                  "properties": {
+                                    "id": {
+                                      "type": "string",
+                                      "description": "Not used yet"
+                                    },
+                                    "type": {
+                                      "type": "string",
+                                      "description": "Not used yet"
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "modified": {
+                            "type": "string",
+                            "description": "Modification date"
+                          }
+                        }
+                      }
+                    },
+                    "id": {
+                      "type": "string",
+                      "minLength": 24,
+                      "maxLength": 24,
+                      "example": "60d31793d5f1fb7e6e3c1a4c",
+                      "description": "Mongo ID of the object"
+                    },
+                    "kind": {
+                      "type": "string",
+                      "description": "Kind of annotation (prediction or annotation).",
+                      "enum": [
+                        "prediction",
+                        "annotation"
+                      ]
+                    },
+                    "media_identifier": {
+                      "type": "object",
+                      "properties": {
+                        "image_id": {
+                          "type": "string",
+                          "minLength": 24,
+                          "maxLength": 24,
+                          "example": "60d31793d5f1fb7e6e3c1a4c",
+                          "description": "Mongo ID of the object"
+                        },
+                        "type": {
+                          "type": "string",
+                          "enum": [
+                            "image"
+                          ],
+                          "description": "Type of media. 'image' for images, 'video' for videos."
+                        }
+                      }
+                    },
+                    "modified": {
+                      "type": "string",
+                      "description": "Modification date"
+                    }
+                  }
+                },
+                "examples": {
+                  "Successfully created": {
+                    "value": {
+                      "annotations": [
+                        {
+                          "id": "6b3b8453-92a2-41ef-9725-63badb218504",
+                          "labels": [
+                            {
+                              "color": "#26518eff",
+                              "id": "61387685df33ae8280c33d9d",
+                              "name": "test",
+                              "probability": 1,
+                              "source": {
+                                "id": "N/A",
+                                "type": "N/A"
+                              }
+                            }
+                          ],
+                          "modified": "2021-09-08T12:43:22.265000+00:00",
+                          "shape": {
+                            "height": 0.3416241235314749,
+                            "type": "RECTANGLE",
+                            "width": 0.2878743820878162,
+                            "x": 0.255742950750042,
+                            "y": 0.408770885812825
+                          }
+                        }
+                      ],
+                      "id": "6138afea3b7b11505c43f2c0",
+                      "kind": "annotation",
+                      "media_identifier": {
+                        "image_id": "6138af293b7b11505c43f2bc",
+                        "type": "image"
+                      },
+                      "modified": "2021-09-08T12:43:22.290000+00:00"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Annotation is invalid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": [
+                    "http_status",
+                    "message",
+                    "error_code"
+                  ],
+                  "properties": {
+                    "http_status": {
+                      "type": "integer",
+                      "enum": [
+                        400,
+                        404,
+                        409,
+                        "412 415",
+                        500,
+                        501,
+                        503
+                      ]
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Message from server"
+                    },
+                    "error_code": {
+                      "type": "string",
+                      "description": "Error code from server"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Object not found. See the examples for details.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": [
+                    "http_status",
+                    "message",
+                    "error_code"
+                  ],
+                  "properties": {
+                    "http_status": {
+                      "type": "integer",
+                      "enum": [
+                        400,
+                        404,
+                        409,
+                        "412 415",
+                        500,
+                        501,
+                        503
+                      ]
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Message from server"
+                    },
+                    "error_code": {
+                      "type": "string",
+                      "description": "Error code from server"
+                    }
+                  }
+                },
+                "examples": {
+                  "Workspace not found response": {
+                    "value": {
+                      "http_status": 404,
+                      "message": "Could not find workspace with id 60ec6bbfb98caeb87e34306e",
+                      "error_code": "workspace_not_found"
+                    }
+                  },
+                  "Project not found response": {
+                    "value": {
+                      "http_status": 404,
+                      "message": "Could not find project with id 60ec6bbfb98caeb87e34306e",
+                      "error_code": "project_not_found"
+                    }
+                  },
+                  "Image not found response": {
+                    "value": {
+                      "http_status": 404,
+                      "message": "Image with id 60ec6bbfb98caeb87e34306e not found",
+                      "error_code": "image_not_found"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/workspaces/{workspace_id}/projects/{project_id}/datasets/{dataset_id}/media/videos/{video_id}/frames/{frame_index}/annotations": {
+      "post": {
+        "tags": [
+          "Annotations"
+        ],
+        "summary": "Create an annotation for a video frame",
+        "description": "Create an annotation for an image from request data.",
+        "operationId": "CreateVideoFrameAnnotation",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "workspace_id",
+            "style": "simple",
+            "description": "The ID of the workspace of interest",
+            "schema": {
+              "type": "string",
+              "minLength": 24,
+              "maxLength": 24,
+              "example": "60d31793d5f1fb7e6e3c1a4c",
+              "description": "Mongo ID of the object"
+            },
+            "required": true
+          },
+          {
+            "in": "path",
+            "name": "project_id",
+            "style": "simple",
+            "description": "The ID of the project of interest",
+            "schema": {
+              "type": "string",
+              "minLength": 24,
+              "maxLength": 24,
+              "example": "60d31793d5f1fb7e6e3c1a4c",
+              "description": "Mongo ID of the object"
+            },
+            "required": true
+          },
+          {
+            "in": "path",
+            "name": "dataset_id",
+            "style": "simple",
+            "description": "The ID of the dataset of interest",
+            "schema": {
+              "type": "string",
+              "minLength": 24,
+              "maxLength": 24,
+              "example": "60d31793d5f1fb7e6e3c1a4c",
+              "description": "Mongo ID of the object"
+            },
+            "required": true
+          },
+          {
+            "in": "path",
+            "name": "video_id",
+            "style": "simple",
+            "description": "The ID of the video of interest",
+            "schema": {
+              "type": "string",
+              "minLength": 24,
+              "maxLength": 24,
+              "example": "60d31793d5f1fb7e6e3c1a4c",
+              "description": "Mongo ID of the object"
+            },
+            "required": true
+          },
+          {
+            "in": "path",
+            "name": "frame_index",
+            "description": "The ID of the video frame index of interest (0-based)",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "example": "30"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "annotations"
+                ],
+                "properties": {
+                  "annotations": {
+                    "description": "List of annotations",
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "required": [
+                        "shape",
+                        "labels"
+                      ],
+                      "properties": {
+                        "shape": {
+                          "oneOf": [
+                            {
+                              "required": [
+                                "type",
+                                "x",
+                                "y",
+                                "width",
+                                "height"
+                              ],
+                              "type": "object",
+                              "title": "Rectangle",
+                              "properties": {
+                                "type": {
+                                  "type": "string",
+                                  "enum": [
+                                    "RECTANGLE"
+                                  ],
+                                  "description": "Type of the shape."
+                                },
+                                "x": {
+                                  "type": "number",
+                                  "description": "x-coordinate of the left side of the rectangle",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "y": {
+                                  "type": "number",
+                                  "description": "y-coordinate of the top of the rectangle",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "width": {
+                                  "type": "number",
+                                  "description": "Width of the rectangle",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "height": {
+                                  "type": "number",
+                                  "description": "Height of the rectangle",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                }
+                              },
+                              "example": {
+                                "type": "RECTANGLE",
+                                "x": 0.635174036,
+                                "y": 0.393743843,
+                                "width": 0.175549313,
+                                "height": 0.204229221
+                              }
+                            },
+                            {
+                              "required": [
+                                "type",
+                                "points"
+                              ],
+                              "type": "object",
+                              "title": "Polygon",
+                              "properties": {
+                                "type": {
+                                  "type": "string",
+                                  "enum": [
+                                    "POLYGON"
+                                  ],
+                                  "description": "Type of the shape."
+                                },
+                                "points": {
+                                  "type": "array",
+                                  "description": "Array of points that define the polygon.",
+                                  "items": {
+                                    "title": "Point",
+                                    "required": [
+                                      "x",
+                                      "y"
+                                    ],
+                                    "type": "object",
+                                    "properties": {
+                                      "x": {
+                                        "type": "number",
+                                        "minimum": 0,
+                                        "maximum": 1
+                                      },
+                                      "y": {
+                                        "type": "number",
+                                        "minimum": 0,
+                                        "maximum": 1
+                                      }
+                                    },
+                                    "example": {
+                                      "x": 0.1,
+                                      "y": 0.1
+                                    }
+                                  }
+                                }
+                              },
+                              "example": {
+                                "type": "POLYGON",
+                                "point": [
+                                  {
+                                    "x": 0.1,
+                                    "y": 0.1
+                                  },
+                                  {
+                                    "x": 0.2,
+                                    "y": 0.2
+                                  },
+                                  {
+                                    "x": 0.1,
+                                    "y": 0.2
+                                  },
+                                  {
+                                    "x": 0.1,
+                                    "y": 0.1
+                                  }
+                                ]
+                              }
+                            },
+                            {
+                              "required": [
+                                "type",
+                                "x",
+                                "y",
+                                "width",
+                                "height"
+                              ],
+                              "type": "object",
+                              "title": "Ellipse",
+                              "properties": {
+                                "type": {
+                                  "type": "string",
+                                  "enum": [
+                                    "ELLIPSE"
+                                  ],
+                                  "description": "Type of the shape."
+                                },
+                                "x": {
+                                  "type": "number",
+                                  "description": "Lowest x-coordinate of the ellipse"
+                                },
+                                "y": {
+                                  "type": "number",
+                                  "description": "Lowest y-coordinate of the ellipse"
+                                },
+                                "width": {
+                                  "type": "number",
+                                  "description": "Width of the ellipse"
+                                },
+                                "height": {
+                                  "type": "number",
+                                  "description": "Height of the ellipse"
+                                }
+                              },
+                              "example": {
+                                "type": "ELLIPSE",
+                                "x": 0.635174036,
+                                "y": 0.393743843,
+                                "width": 0.175549313,
+                                "height": 0.204229221
+                              }
+                            }
+                          ]
+                        },
+                        "labels": {
+                          "description": "List of labels",
+                          "type": "array",
+                          "minItems": 1,
+                          "items": {
+                            "type": "object",
+                            "required": [
+                              "id"
+                            ],
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "minLength": 24,
+                                "maxLength": 24,
+                                "example": "60d31793d5f1fb7e6e3c1a4c",
+                                "description": "Mongo ID of the object"
+                              },
+                              "probability": {
+                                "title": "Probability",
+                                "type": "number",
+                                "format": "float",
+                                "description": "Estimated probability of a prediction. For annotations, this is set to 1."
+                              },
+                              "name": {
+                                "type": "string",
+                                "description": "Name of the label"
+                              },
+                              "color": {
+                                "type": "string",
+                                "description": "Color of the label"
+                              },
+                              "source": {
+                                "type": "object",
+                                "properties": {
+                                  "id": {
+                                    "type": "string",
+                                    "description": "Not used yet"
+                                  },
+                                  "type": {
+                                    "type": "string",
+                                    "description": "Not used yet"
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        },
+                        "id": {
+                          "type": "string",
+                          "example": "e42cf382-5f7b-4fda-980a-fa0fab00243c",
+                          "description": "A UUID, used to identify an annotation."
+                        }
+                      }
+                    }
+                  },
+                  "media_identifier": {
+                    "type": "object",
+                    "properties": {
+                      "frame_index": {
+                        "type": "number",
+                        "format": "integer"
+                      },
+                      "video_id": {
+                        "type": "string",
+                        "minLength": 24,
+                        "maxLength": 24,
+                        "example": "60d31793d5f1fb7e6e3c1a4c",
+                        "description": "Mongo ID of the object"
+                      },
+                      "type": {
+                        "type": "string",
+                        "enum": [
+                          "video_frame"
+                        ],
+                        "description": "Type of media. 'image' for images, 'video' for videos."
+                      }
+                    }
+                  },
+                  "modified": {
+                    "type": "string",
+                    "description": "Modification date"
+                  }
+                }
+              },
+              "examples": {
+                "Creating an annotation": {
+                  "value": {
+                    "media_identifier": {
+                      "type": "image",
+                      "image_id": "6138af293b7b11505c43f2bc"
+                    },
+                    "annotations": [
+                      {
+                        "id": "6b3b8453-92a2-41ef-9725-63badb218504",
+                        "shape": {
+                          "type": "RECTANGLE",
+                          "x": 0.255742950750042,
+                          "y": 0.408770885812825,
+                          "width": 0.2878743820878162,
+                          "height": 0.3416241235314749
+                        },
+                        "labels": [
+                          {
+                            "id": "61387685df33ae8280c33d9d",
+                            "name": "test",
+                            "color": "#26518eff",
+                            "probability": 1,
+                            "source": {
+                              "id": "N/A",
+                              "type": "User"
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Annotation successfully uploaded for a video frame",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "annotations": {
+                      "description": "List of annotations",
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "example": "e42cf382-5f7b-4fda-980a-fa0fab00243c",
+                            "description": "A UUID, used to identify an annotation."
+                          },
+                          "shape": {
+                            "oneOf": [
+                              {
+                                "type": "object",
+                                "title": "Rectangle",
+                                "properties": {
+                                  "type": {
+                                    "type": "string",
+                                    "enum": [
+                                      "RECTANGLE"
+                                    ],
+                                    "description": "Type of the shape."
+                                  },
+                                  "x": {
+                                    "type": "number",
+                                    "description": "x-coordinate of the left side of the rectangle"
+                                  },
+                                  "y": {
+                                    "type": "number",
+                                    "description": "y-coordinate of the top of the rectangle"
+                                  },
+                                  "width": {
+                                    "type": "number",
+                                    "description": "Width of the rectangle"
+                                  },
+                                  "height": {
+                                    "type": "number",
+                                    "description": "Height of the rectangle"
+                                  }
+                                },
+                                "example": {
+                                  "type": "RECTANGLE",
+                                  "x": 0.635174036,
+                                  "y": 0.393743843,
+                                  "width": 0.175549313,
+                                  "height": 0.204229221
+                                }
+                              },
+                              {
+                                "type": "object",
+                                "title": "Polygon",
+                                "properties": {
+                                  "type": {
+                                    "type": "string",
+                                    "enum": [
+                                      "POLYGON"
+                                    ],
+                                    "description": "Type of the shape."
+                                  },
+                                  "points": {
+                                    "type": "array",
+                                    "description": "Array of points that define the polygon.",
+                                    "items": {
+                                      "title": "Point",
+                                      "type": "object",
+                                      "properties": {
+                                        "x": {
+                                          "type": "number"
+                                        },
+                                        "y": {
+                                          "type": "number"
+                                        }
+                                      },
+                                      "example": {
+                                        "x": 0.1,
+                                        "y": 0.1
+                                      }
+                                    }
+                                  }
+                                },
+                                "example": {
+                                  "type": "POLYGON",
+                                  "point": [
+                                    {
+                                      "x": 0.1,
+                                      "y": 0.1
+                                    },
+                                    {
+                                      "x": 0.2,
+                                      "y": 0.2
+                                    },
+                                    {
+                                      "x": 0.1,
+                                      "y": 0.2
+                                    },
+                                    {
+                                      "x": 0.1,
+                                      "y": 0.1
+                                    }
+                                  ]
+                                }
+                              },
+                              {
+                                "type": "object",
+                                "title": "Ellipse",
+                                "properties": {
+                                  "type": {
+                                    "type": "string",
+                                    "enum": [
+                                      "ELLIPSE"
+                                    ],
+                                    "description": "Type of the shape."
+                                  },
+                                  "x": {
+                                    "type": "number",
+                                    "description": "Lowest x-coordinate of the ellipse"
+                                  },
+                                  "y": {
+                                    "type": "number",
+                                    "description": "Lowest y-coordinate of the ellipse"
+                                  },
+                                  "width": {
+                                    "type": "number",
+                                    "description": "Width of the ellipse"
+                                  },
+                                  "height": {
+                                    "type": "number",
+                                    "description": "Height of the ellipse"
+                                  }
+                                },
+                                "example": {
+                                  "type": "ELLIPSE",
+                                  "x": 0.635174036,
+                                  "y": 0.393743843,
+                                  "width": 0.175549313,
+                                  "height": 0.204229221
+                                }
+                              }
+                            ]
+                          },
+                          "labels": {
+                            "description": "List of labels",
+                            "type": "array",
+                            "minItems": 1,
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "id": {
+                                  "type": "string",
+                                  "minLength": 24,
+                                  "maxLength": 24,
+                                  "example": "60d31793d5f1fb7e6e3c1a4c",
+                                  "description": "Mongo ID of the object"
+                                },
+                                "probability": {
+                                  "title": "Probability",
+                                  "type": "number",
+                                  "format": "float",
+                                  "description": "Estimated probability of a prediction. For annotations, this is set to 1."
+                                },
+                                "name": {
+                                  "type": "string",
+                                  "description": "Name of the label"
+                                },
+                                "color": {
+                                  "type": "string",
+                                  "description": "Color of the label"
+                                },
+                                "source": {
+                                  "type": "object",
+                                  "properties": {
+                                    "id": {
+                                      "type": "string",
+                                      "description": "Not used yet"
+                                    },
+                                    "type": {
+                                      "type": "string",
+                                      "description": "Not used yet"
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "modified": {
+                            "type": "string",
+                            "description": "Modification date"
+                          }
+                        }
+                      }
+                    },
+                    "id": {
+                      "type": "string",
+                      "minLength": 24,
+                      "maxLength": 24,
+                      "example": "60d31793d5f1fb7e6e3c1a4c",
+                      "description": "Mongo ID of the object"
+                    },
+                    "kind": {
+                      "type": "string",
+                      "description": "Kind of annotation (prediction or annotation).",
+                      "enum": [
+                        "prediction",
+                        "annotation"
+                      ]
+                    },
+                    "media_identifier": {
+                      "type": "object",
+                      "properties": {
+                        "frame_index": {
+                          "type": "number",
+                          "format": "integer"
+                        },
+                        "video_id": {
+                          "type": "string",
+                          "minLength": 24,
+                          "maxLength": 24,
+                          "example": "60d31793d5f1fb7e6e3c1a4c",
+                          "description": "Mongo ID of the object"
+                        },
+                        "type": {
+                          "type": "string",
+                          "enum": [
+                            "video_frame"
+                          ],
+                          "description": "Type of media. 'image' for images, 'video' for videos."
+                        }
+                      }
+                    },
+                    "modified": {
+                      "type": "string",
+                      "description": "Modification date"
+                    }
+                  }
+                },
+                "examples": {
+                  "Successfully created": {
+                    "value": {
+                      "annotations": [
+                        {
+                          "id": "5d33413a-bf99-4af7-bebb-e30d0c6cfc9f",
+                          "labels": [
+                            {
+                              "color": "#00c3ffff",
+                              "id": "610a9065a0d4fbb541cac729",
+                              "name": "test1",
+                              "probability": 1,
+                              "source": {
+                                "id": "N/A",
+                                "type": "N/A"
+                              }
+                            }
+                          ],
+                          "modified": "2021-08-04T13:06:47.056000+00:00",
+                          "shape": {
+                            "height": 0.557666242,
+                            "type": "ELLIPSE",
+                            "width": 0.313687265,
+                            "x": 0.235582918,
+                            "y": 0.098048836
+                          }
+                        }
+                      ],
+                      "id": "610a90e7a0d4fbb541cac7b0",
+                      "kind": "annotation",
+                      "media_identifier": {
+                        "frame_index": 420,
+                        "type": "video_frame",
+                        "video_id": "610a908ea0d4fbb541cac741"
+                      },
+                      "modified": "2021-08-04T13:06:47.056000+00:00"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Annotation is invalid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": [
+                    "http_status",
+                    "message",
+                    "error_code"
+                  ],
+                  "properties": {
+                    "http_status": {
+                      "type": "integer",
+                      "enum": [
+                        400,
+                        404,
+                        409,
+                        "412 415",
+                        500,
+                        501,
+                        503
+                      ]
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Message from server"
+                    },
+                    "error_code": {
+                      "type": "string",
+                      "description": "Error code from server"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Object not found. See the examples for details.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": [
+                    "http_status",
+                    "message",
+                    "error_code"
+                  ],
+                  "properties": {
+                    "http_status": {
+                      "type": "integer",
+                      "enum": [
+                        400,
+                        404,
+                        409,
+                        "412 415",
+                        500,
+                        501,
+                        503
+                      ]
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Message from server"
+                    },
+                    "error_code": {
+                      "type": "string",
+                      "description": "Error code from server"
+                    }
+                  }
+                },
+                "examples": {
+                  "Workspace not found response": {
+                    "value": {
+                      "http_status": 404,
+                      "message": "Could not find workspace with id 60ec6bbfb98caeb87e34306e",
+                      "error_code": "workspace_not_found"
+                    }
+                  },
+                  "Project not found response": {
+                    "value": {
+                      "http_status": 404,
+                      "message": "Could not find project with id 60ec6bbfb98caeb87e34306e",
+                      "error_code": "project_not_found"
+                    }
+                  },
+                  "Video not found response": {
+                    "value": {
+                      "http_status": 404,
+                      "message": "Video with id 60ec6bbfb98caeb87e34306e not found",
+                      "error_code": "video_not_found"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Authentication"
+    },
+    {
+      "name": "Projects"
+    },
+    {
+      "name": "Media"
+    },
+    {
+      "name": "Annotations"
+    }
+  ]
+}

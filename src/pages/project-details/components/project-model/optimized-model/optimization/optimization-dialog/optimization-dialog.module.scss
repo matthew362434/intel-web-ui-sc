@@ -1,0 +1,33 @@
+.optimizationDialogContent {
+    background-color: var(--spectrum-global-color-gray-50);
+    overflow-x: hidden;
+    border: 1px solid var(--spectrum-global-color-gray-50);
+    border-radius: var(--spectrum-global-dimension-size-50);
+    padding: var(--spectrum-global-dimension-size-250);
+
+    & svg[aria-label='Training-time optimization alert'] {
+        fill: var(--spectrum-semantic-notice-color-icon) !important;
+    }
+}
+
+.optimizationFilterPruning {
+    padding-right: var(--spectrum-global-dimension-size-100) !important;
+}
+
+.optimizationAwareContainer {
+    & > div {
+        margin-left: var(--spectrum-global-dimension-size-300);
+    }
+}
+
+.filterPruningTooltip {
+    & svg[class*='spectrum-UIIcon-CheckmarkSmall'] {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+
+    & span[class*='spectrum-ActionButton-label'] {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+}

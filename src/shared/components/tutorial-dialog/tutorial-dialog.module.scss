@@ -1,0 +1,35 @@
+.dialogWrapper {
+    background-color: var(--brand-daisy);
+    color: var(--spectrum-global-color-gray-50);
+    padding: var(--spectrum-global-dimension-size-200);
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    height: 100%;
+}
+
+.dialogButtonGroup {
+    margin-top: auto;
+    margin-left: auto;
+}
+
+.dialogButton {
+    color: var(--spectrum-global-color-gray-50) !important;
+    border-color: var(--spectrum-global-color-gray-50) !important;
+
+    &:hover {
+        background-color: var(--spectrum-global-color-gray-50) !important;
+        color: var(--spectrum-global-color-gray-900) !important;
+    }
+}
+
+.dialogButtonQuiet {
+    @extend .dialogButton;
+
+    border-color: transparent !important;
+}
+
+.dialogDescription {
+    max-height: 80%;
+    overflow: auto;
+}

@@ -1,0 +1,251 @@
+@import '@spectrum-css/vars/dist/spectrum-global.css';
+@import '@spectrum-css/vars/dist/spectrum-medium.css';
+@import '@spectrum-css/vars/dist/spectrum-dark.css';
+@import '@spectrum-css/icon/dist/index-vars.css';
+@import '@spectrum-css/breadcrumb/dist/index-vars.css';
+@import '../theme/sonoma-creek.module.css';
+
+:root {
+    --intel-blue: #0095ca;
+    --energy-blue: #00c7fd;
+
+    height: 100vh;
+
+    [class*='spectrum'] {
+        font-family: intelClear !important;
+    }
+}
+
+@font-face {
+    font-family: intelOne;
+    src: url(./fonts/intelone-display-regular.woff);
+}
+
+@font-face {
+    font-family: intelClear;
+    src: url(./fonts/intel-clear.woff);
+}
+
+html {
+    font-size: 62.5% !important;
+}
+
+body {
+    margin: 0;
+    font-family: intelClear !important;
+    max-width: 100vw;
+    scrollbar-width: var(--spectrum-global-dimension-size-65);
+}
+
+button,
+li[role='menuitem'],
+li[role='menuitemradio'],
+input[type='checkbox'],
+div[role='tab'],
+div[role='tab'] span {
+    cursor: pointer !important;
+}
+
+input:disabled,
+button[class*='is-disabled'],
+li[class*='is-disabled'] {
+    pointer-events: none;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+span {
+    font-family: intelClear !important;
+
+    /* Apply this rule only for firefox */
+    @supports (-moz-appearance: none) {
+        font-weight: normal !important;
+    }
+}
+
+h6 {
+    font-size: 1.6rem;
+}
+
+ul,
+nav {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+/* CUSTOM SVG STYLES */
+
+svg {
+    fill: currentColor;
+}
+
+svg[class*='spectrum-Textfield-validationIcon'] {
+    fill: var(--spectrum-semantic-negative-color-icon) !important;
+}
+
+/* classes below are needed to not show checkmark when item on menu is selected
+and to not keep column in grid view for that */
+svg[class*='spectrum-Menu-checkmark'] {
+    display: none !important;
+}
+
+/* CUSTOM INPUT STYLES */
+
+input[type='password']::-ms-reveal,
+input[type='password']::-ms-clear {
+    display: none;
+}
+
+input:-internal-autofill-selected {
+    background-color: var(--spectrum-global-color-gray-50);
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+    box-shadow: 0 0 0 30px var(--spectrum-global-color-gray-50) inset !important;
+    -webkit-box-shadow: 0 0 0 30px var(--spectrum-global-color-gray-50) inset !important;
+}
+
+input:-webkit-autofill {
+    -webkit-text-fill-color: #fff !important;
+}
+
+input {
+    &::-webkit-input-placeholder {
+        /* Edge */
+        font-style: normal !important;
+    }
+
+    &:-ms-input-placeholder {
+        /* Internet Explorer 10-11 */
+        font-style: normal !important;
+    }
+
+    &::placeholder {
+        font-style: normal !important;
+    }
+}
+
+/* CUSTOM SCROLLBAR STYLES */
+
+::-webkit-scrollbar {
+    width: var(--spectrum-global-dimension-size-65);
+    height: var(--spectrum-global-dimension-size-65);
+}
+
+::-webkit-scrollbar-track {
+    background-color: var(--spectrum-global-color-gray-50);
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: var(--spectrum-global-color-gray-400);
+    border-radius: var(--spectrum-global-dimension-size-325);
+}
+
+div[class*='spectrum-Textfield--quiet'] {
+    border-bottom: var(--spectrum-alias-border-size-thin,var(--spectrum-global-dimension-static-size-10)) solid !important;
+    border-color: var(--spectrum-alias-border-color,var(--spectrum-global-color-gray-400)) !important;
+}
+
+div[class*='spectrum-Menu-itemGrid'] {
+    grid-template-columns:
+        calc(var(--spectrum-global-dimension-size-150) - var(--spectrum-global-dimension-static-size-25, 2px))
+        auto 1fr auto auto auto
+        var(--spectrum-global-dimension-size-150) !important;
+}
+
+div.spectrum-TreeView-itemLink:before {
+    content: none !important;
+}
+
+div[class*='spectrum-Modal-wrapper'] {
+    z-index: 100000 !important;
+}
+
+div[class*='spectrum-Underlay'] {
+    z-index: 100000 !important;
+}
+
+div[class*='spectrum-Tabs--quiet'] {
+    border: 0 !important;
+}
+
+div[class*='spectrum-Tooltip'] {
+    padding: var(--spectrum-global-dimension-size-150) !important;
+}
+
+[class*='spectrum-Radio-input'] {
+    cursor: pointer !important;
+
+    &:checked + [class*='spectrum-Radio-button']:before {
+        border-color: var(--spectrum-global-color-informative) !important;
+    }
+}
+
+/* CUSTOM STYLES FOR MEDIA PAGE */
+
+.mediaContentGridList {
+    display: grid;
+    gap: var(--spectrum-global-dimension-size-100);
+
+    /* Width/height dimension of the thumbnail */
+    --default-thumbnail-size: 200px;
+    --anomaly-thumbnail-size: 120px;
+
+    .mediaContentGridListItem {
+        display: flex;
+        height: var(--default-thumbnail-size);
+    }
+
+    &.anomalyGrid {
+        grid-template-columns: repeat(auto-fill, minmax(var(--anomaly-thumbnail-size), 1fr)) !important;
+
+        .mediaContentGridListItem {
+            height: var(--anomaly-thumbnail-size);
+
+            img {
+                height: var(--anomaly-thumbnail-size);
+            }
+        }
+    }
+
+    @media (min-width: 680px) {
+        grid-template-columns: repeat(2, minmax(var(--default-thumbnail-size), 1fr));
+    }
+
+    @media (min-width: 900px) {
+        grid-template-columns: repeat(3, minmax(var(--default-thumbnail-size), 1fr));
+    }
+
+    @media (min-width: 1140px) {
+        grid-template-columns: repeat(4, minmax(var(--default-thumbnail-size), 1fr));
+    }
+
+    @media (min-width: 1360px) {
+        grid-template-columns: repeat(5, auto);
+    }
+
+    @media (min-width: 1860px) {
+        grid-template-columns: repeat(6, auto);
+    }
+}
+
+/* CUSTOM CHART STYLES */
+
+.recharts-legend-item-text {
+    color: var(--spectrum-global-color-gray-800) !important;
+}
+
+/* CUSTOM INPUT OVERFLOW STYLES */
+
+.textOverflow {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

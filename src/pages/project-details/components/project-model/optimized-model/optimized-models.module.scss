@@ -1,0 +1,12 @@
+.trainingModelTableHeader:not(:first-child) {
+  display: flex;
+  justify-content: center;
+}
+
+.trainingModelTableRow > div:not(:first-child) {
+  text-align: center;
+}
+
+.optimizedModelButton {
+  background-color: var(--energy-blue-dark);
+}

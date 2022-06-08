@@ -1,0 +1,12 @@
+.button {
+  &:hover {
+    border-color: var(--spectrum-global-color-gray-900) !important;
+  }
+}
+
+.basicColor {
+  button[class*="is-active"] {
+    border-color: var(--spectrum-global-color-gray-900) !important;
+    background-color: transparent;
+  }
+}

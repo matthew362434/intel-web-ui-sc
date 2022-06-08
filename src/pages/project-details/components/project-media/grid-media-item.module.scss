@@ -1,0 +1,28 @@
+.mediaItem {
+  position: relative;
+  cursor: pointer;
+  width: 100%;
+
+  &:hover {
+    .mediaItemCheckboxContainer {
+      visibility: visible;
+
+      & label, svg {
+        opacity: 1;
+        transition: opacity .3s ease-in-out;
+      }
+    }
+  }
+}
+
+.mediaItemSelected {
+  cursor: pointer !important;
+}
+
+.mediaItemCheckboxContainer {
+  visibility: hidden;
+
+  & label, svg {
+    opacity: 0;
+  }
+}

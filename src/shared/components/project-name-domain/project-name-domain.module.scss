@@ -1,0 +1,15 @@
+.header {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  align-self: center;
+  white-space: nowrap;
+  margin: 0;
+}
+
+.headerBox:hover .editNameButton {
+  display: inline-block !important;
+}
+
+.editNameButton {
+  display: none !important;
+}

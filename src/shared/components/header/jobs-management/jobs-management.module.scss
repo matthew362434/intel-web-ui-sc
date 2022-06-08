@@ -1,0 +1,11 @@
+.checkmark {
+  & > svg {
+    fill: var(--energy-blue);
+  }
+}
+
+.alert {
+  & > svg {
+    fill: var(--brand-coral-cobalt);
+  }
+}

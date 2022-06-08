@@ -1,0 +1,104 @@
+.react-daterange-picker {
+    margin-top: var(--spectrum-global-dimension-size-100);
+}
+
+.react-daterange-picker__calendar {
+    top: 110% !important;
+}
+
+.react-daterange-picker__button svg {
+    stroke: var(--spectrum-global-color-gray-900);
+}
+
+.react-daterange-picker__button:hover svg {
+    stroke: var(--spectrum-global-color-gray-700) !important;
+}
+
+.react-daterange-picker__wrapper {
+    border: var(--spectrum-alias-border-size-thin) solid var(--spectrum-global-color-gray-400);
+    border-radius: var(--spectrum-alias-border-size-thick);
+    padding: var(--spectrum-global-dimension-static-size-75);
+}
+
+.react-calendar {
+    border: var(--spectrum-alias-border-size-thin) solid var(--spectrum-global-color-gray-400);
+    border-radius: var(--spectrum-alias-border-size-thick);
+    background-color: var(--spectrum-global-color-gray-200);
+}
+
+.react-calendar button:enabled:hover {
+    background-color: var(--spectrum-global-color-gray-500);
+}
+
+.react-calendar button:disabled {
+    cursor: default !important;
+}
+
+.react-calendar__tile--hover {
+    background-color: var(--spectrum-global-color-gray-500);
+}
+
+.react-calendar__tile--active {
+    background-color: var(--energy-blue);
+}
+
+.react-calendar__tile--active:enabled:focus {
+    background-color: var(--energy-blue);
+}
+
+.react-calendar__month-view__weekdays__weekday abbr {
+    text-decoration: none;
+}
+
+.react-calendar__month-view__days__day--weekend, .react-calendar__month-view__days__day--neighboringMonth {
+    color: var(--spectrum-global-color-gray-900);
+}
+
+.react-calendar__tile--now  {
+    background-color: transparent;
+}
+
+.react-calendar--selectRange .react-calendar__tile--hover{
+    background-color: var(--spectrum-global-color-gray-500);
+}
+
+.react-calendar__tile:disabled, .react-calendar__navigation button:disabled {
+    background-color: var(--spectrum-global-color-gray-100);
+    color: var(--spectrum-global-color-gray-600);
+}
+
+.react-daterange-picker__range-divider {
+    display: block;
+    margin-right: var(--spectrum-global-dimension-size-125);
+    margin-left: var(--spectrum-global-dimension-size-125);
+}
+
+.react-date-picker__inputGroup__divider {
+    color: var(--spectrum-global-color-gray-600);
+}
+
+.dateRange {
+    font-size: var(--spectrum-global-dimension-static-font-size-75);
+    color: var(--spectrum-global-color-gray-700);
+}
+
+.logsButtonGroup {
+    padding-top: var(--spectrum-global-dimension-size-350);
+}
+
+.exportButton > a {
+    text-decoration: none !important;
+    color: #fff;
+}
+
+.exportButton:disabled > a {
+    color: var(--spectrum-global-color-gray-600);
+}
+
+.dialogContent {
+    overflow: visible !important;
+}
+
+.exportLogsBtn > span {
+    text-decoration: underline;
+}

@@ -1,0 +1,23 @@
+.userPhotoPlaceholder {
+  color: var(--spectrum-global-color-gray-900);
+  border-radius: 50%;
+}
+
+.userPhotoUploadPlaceholder {
+  font-size: var(--spectrum-global-dimension-size-900);
+  cursor: pointer;
+}
+
+.userPhotoUploadBtn {
+  color: var(--energy-blue) !important;
+  background-color: transparent !important;
+  border: none;
+
+  & > span {
+    padding-left: 0 !important;
+  }
+
+  &:hover {
+    color: var(--energy-blue);
+  }
+}

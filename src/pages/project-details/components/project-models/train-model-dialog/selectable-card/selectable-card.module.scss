@@ -1,0 +1,11 @@
+.selectableCard {
+  flex-basis: 31%;
+  cursor: pointer;
+  box-sizing: border-box;
+  border: 2px solid transparent;
+}
+
+.selectableCardSelected {
+  border: 2px solid var(--energy-blue);
+  border-radius: var(--spectrum-alias-border-radius-regular);
+}

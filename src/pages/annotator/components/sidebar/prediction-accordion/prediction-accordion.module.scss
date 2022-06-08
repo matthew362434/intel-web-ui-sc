@@ -1,0 +1,25 @@
+.heading {
+    margin: 0;
+    font-size: var(--spectrum-global-dimension-font-size-75);
+    line-height: var(--spectrum-global-dimension-size-175);
+}
+
+.descriptionWrapper {
+    display: flex;
+    padding-left: 0;
+}
+
+.description {
+    margin-left: var(--spectrum-global-dimension-size-100);
+    flex-grow: 1;
+}
+
+.link {
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.thresholdTooltipButton {
+    width: 100%;
+    text-align: left;
+}

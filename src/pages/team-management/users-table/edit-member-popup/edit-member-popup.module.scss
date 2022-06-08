@@ -1,0 +1,11 @@
+.editMemberTitle, .editMemberUserInfo {
+  font-size: var(--spectrum-global-dimension-font-size-200);
+}
+
+.editMemberEmail > svg {
+    width: var(--spectrum-global-dimension-size-175);
+}
+
+.editMemberEmail {
+  flex-basis: calc(90% - var(--spectrum-global-dimension-size-175));
+}

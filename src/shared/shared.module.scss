@@ -1,0 +1,19 @@
+.rotate{
+  animation: rotate 1.5s linear infinite;
+}
+
+@keyframes rotate{
+  to{ transform: rotate(360deg); }
+}
+
+.dialogContent {
+  background-color: var(--spectrum-global-color-gray-50);
+  border: 1px solid var(--spectrum-global-color-gray-50);
+  border-radius: var(--spectrum-alias-border-radius-regular);
+}
+
+.contentDisabled {
+  pointer-events: none;
+  user-select: none;
+  opacity: 0.7;
+}

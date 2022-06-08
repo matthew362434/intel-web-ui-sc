@@ -1,0 +1,11 @@
+.tooltip {
+    background-color: var(--spectrum-global-color-gray-400) !important;
+    
+    & span {
+        color: var(--spectrum-global-color-gray-800);
+    }
+
+    & span[class*='spectrum-Tooltip-tip'] {
+        border-top-color: var(--spectrum-global-color-gray-400);
+    }
+}

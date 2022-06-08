@@ -1,0 +1,110 @@
+.componentWrapper {
+    width: calc(100% - (var(--spectrum-global-dimension-size-300) * 2));
+    height: calc(100% - (var(--spectrum-global-dimension-size-150) * 2));
+    padding: var(--spectrum-global-dimension-size-150) var(--spectrum-global-dimension-size-300);
+}
+
+.parentTabList {
+    width: 100%;
+    span[class*='spectrum-Tabs-itemLabel'] {
+        font-size: var(--spectrum-global-dimension-font-size-300);
+        font-weight: var(--spectrum-global-font-weight-semi-bold);
+    }
+}
+
+.childrenTabList {
+    div[class*='spectrum-Tabs-selectionIndicator'] {
+        display: none;
+    }
+}
+
+.exportDialogBody,
+.exportDialogFooter {
+    padding: var(--spectrum-global-dimension-size-250);
+    background: var(--spectrum-global-color-gray-50);
+}
+
+.videoNotification {
+    display: flex;
+    align-items: center;
+    margin-top: var(--spectrum-global-dimension-size-300);
+    margin-bottom: var(--spectrum-global-dimension-size-115);
+
+    svg {
+        fill: var(--spectrum-semantic-notice-color-icon);
+        margin-right: var(--spectrum-global-dimension-size-150);
+    }
+}
+
+.videoNotificationList {
+    position: relative;
+    list-style-type: disc;
+
+    li {
+        margin-left: var(--spectrum-global-dimension-size-600);
+
+        &::marker {
+            color: var(--spectrum-alias-icon-color);
+        }
+    }
+}
+
+.formatRow {
+    &:first-child {
+        padding-top: var(--spectrum-global-dimension-size-150);
+    }
+
+    justify-content: space-between;
+    padding-top: var(--spectrum-global-dimension-size-350);
+    margin-left: var(--spectrum-global-dimension-size-125);
+    padding-bottom: var(--spectrum-global-dimension-size-200);
+
+    label {
+        text-transform: uppercase;
+    }
+
+    a {
+        text-decoration: none;
+
+        svg {
+            fill: var(--spectrum-alias-icon-color);
+        }
+    }
+}
+
+.exportStatusContainer {
+    position: relative;
+    margin: var(--spectrum-global-dimension-size-250) 0px;
+    padding: var(--spectrum-global-dimension-size-200);
+    background: var(--spectrum-global-color-gray-75);
+
+    svg {
+        animation: rotating 2s linear infinite;
+        margin-right: var(--spectrum-global-dimension-size-200);
+    }
+}
+
+.exportStatusTitle {
+    margin: 0px;
+    font-weight: bold;
+    font-size: var(--spectrum-global-dimension-size-200);
+}
+
+@keyframes rotating {
+    from {
+        -webkit-transform: rotate(0deg);
+    }
+    to {
+        -webkit-transform: rotate(360deg);
+    }
+}
+
+.exportDownloadOptions {
+    position: absolute !important;
+    top: var(--spectrum-global-dimension-size-200);
+    right: var(--spectrum-global-dimension-size-200);
+}
+
+.downloadLink {
+    text-decoration: none;
+}

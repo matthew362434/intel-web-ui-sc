@@ -1,0 +1,13 @@
+.taskListButton {
+    & button[aria-haspopup='listbox'] {
+        border: 0;
+        background-color: var(--spectrum-global-color-gray-50);
+        padding-left: 0;
+    }
+}
+
+.taskItem {
+   &+ svg[class*="spectrum-Menu-checkmark"] {
+      display: block !important;
+    }
+}

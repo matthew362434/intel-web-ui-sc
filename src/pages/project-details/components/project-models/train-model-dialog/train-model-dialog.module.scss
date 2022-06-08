@@ -1,0 +1,18 @@
+.buttonGroup {
+    padding-top: var(--spectrum-global-dimension-static-size-250);
+}
+
+.trainingDialogDescription {
+    color: var(--spectrum-global-color-gray-800);
+    font-size: var(--spectrum-global-dimension-static-font-size-100);
+}
+
+.trainingDialogStepNumber {
+    color: var(--spectrum-global-color-gray-700);
+    font-size: var(--spectrum-global-dimension-static-font-size-75);
+}
+
+.trainingDialogContent {
+    box-sizing: border-box;
+    overflow: hidden;
+}

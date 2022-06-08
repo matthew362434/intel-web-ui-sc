@@ -1,0 +1,20 @@
+.toast {
+    min-width: var(--spectrum-global-dimension-size-4600);
+    width: 100%;
+}
+
+.spectrum-Toast--warning {
+    background-color: var(--spectrum-toast-warning-background-color);
+}
+
+.spectrum-Toast-content--warning {
+    color: var(--spectrum-global-color-gray-50) !important;
+}
+
+.spectrum-Toast-buttons--warning {
+    border-left-color: rgba(0, 0, 0, 0.12) !important;
+}
+
+.close-notification-icon--warning {
+    fill: var(--spectrum-global-color-gray-50) !important;
+}

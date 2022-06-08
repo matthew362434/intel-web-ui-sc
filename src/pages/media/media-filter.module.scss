@@ -1,0 +1,74 @@
+div[class*='spectrum-Textfield--quiet'] {
+    input,
+    textarea {
+        padding: inherit !important;
+    }
+
+    svg {
+        display: none;
+    }
+}
+
+div[role='option'] svg {
+    grid-area: icon;
+    padding-right: var(--spectrum-global-dimension-size-65);
+}
+
+button[aria-label='Media filter filed'] svg {
+    padding-right: var(--spectrum-global-dimension-size-65);
+}
+
+.dialogBody {
+    right: 0px;
+    width: 100vw;
+    z-index: 9999;
+    outline: none;
+    position: fixed;
+    border-style: solid;
+    box-sizing: border-box;
+    padding: var(--spectrum-global-dimension-size-300);
+    background-color: var(--spectrum-global-color-gray-50);
+    max-width: calc(var(--spectrum-global-dimension-size-6000) * 1.3);
+    transform: translateY(var(--spectrum-global-dimension-size-65));
+    transition: transform 0.13s ease-in-out, opacity 0.13s ease-in-out, visibility 0ms linear 0.13s;
+    border-width: var(--spectrum-alias-border-size-thin, var(--spectrum-global-dimension-static-size-10));
+    border-radius: var(--spectrum-alias-border-radius-regular, var(--spectrum-global-dimension-size-50));
+    border-color: var(--spectrum-alias-border-color-dark, var(--spectrum-global-color-gray-400));
+}
+
+.filterPanelHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.filterPanelContent {
+    overflow: visible;
+}
+
+.rowBody {
+    padding-left: var(--spectrum-global-dimension-size-250);
+
+    &:not(:first-child) {
+        margin-top: var(--spectrum-global-dimension-size-200);
+    }
+}
+
+.rowFields {
+    flex-basis: 100%;
+    align-items: center;
+    justify-content: space-between;
+
+    & > div {
+        width: calc(33% - var(--spectrum-global-dimension-size-200));
+    }
+}
+
+.dialogFooter {
+    padding-top: var(--spectrum-global-dimension-size-250) !important;
+}
+
+.addIcon {
+    padding-left: var(--spectrum-global-dimension-size-175);
+    padding-right: var(--spectrum-global-dimension-size-175);
+}

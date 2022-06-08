@@ -1,0 +1,36 @@
+.errorContainer {
+    background-image: url(../../../assets/login_background.png);
+    background-position: top center;
+    background-size: cover;
+    display: grid;
+    place-items: center;
+    font-size: var(--spectrum-global-dimension-static-font-size-100)
+}
+
+.errorAppTitle {
+    color: var(--spectrum-global-color-gray-900) !important;
+    font-size: var(--spectrum-global-dimension-static-font-size-300);
+}
+
+.errorCodeText {
+    font-family: intelOne;
+    color: var(--spectrum-global-color-gray-800) !important;
+}
+
+.errorMessage {
+    font-size: var(--spectrum-global-dimension-font-size-100) !important;
+    font-style: normal !important;
+    color: var(--spectrum-global-color-gray-900) !important;
+}
+
+.unauthorizedIcon {
+    display: grid;
+    place-items: center;
+    background-position: top center;
+    background-image: url(../../../assets/images/unauthorized.svg);
+    background-repeat: no-repeat;
+    background-size: contain;
+    order: 1;
+    width: var(--spectrum-global-dimension-size-1600);
+    height: var(--spectrum-global-dimension-size-1600);
+}
